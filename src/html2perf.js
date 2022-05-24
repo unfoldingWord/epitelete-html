@@ -18,14 +18,17 @@ function html2perf(html) {
         }
 
         const target = curr.getAttribute("data-target");
+        const nBlocks = curr.getAttribute("data-nBlocks");
+
         if (target) block.target = target;
+        if (nBlocks) block.nBlocks = nBlocks;
 
         prev.push(block);
         
         return prev;
     }, []);
 
-    // console.log({blocks});
+    console.log({blocks});
 
     const perf = {
         blocks,
