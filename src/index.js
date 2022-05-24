@@ -1,4 +1,4 @@
-import Epitelete from "Epitelete";
+import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 
 class EpiteletePerfHtml extends Epitelete{
@@ -17,7 +17,7 @@ class EpiteletePerfHtml extends Epitelete{
         };
         Object.keys(doc.sequences)
             .forEach(seqId => { ret.sequenceHtml[seqId] = perf2html(doc, seqId) });
-        
+
         return JSON.stringify(ret, null, 2);
     }
 }
