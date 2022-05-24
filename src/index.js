@@ -27,7 +27,7 @@ class EpiteletePerfHtml extends Epitelete{
         const validator = new ProskommaJsonValidator();
         const result = validator.validate('sequencePerf', sequencePerf);
         if (!result.isValid) {
-            throw new Error(result.errors[0].message);
+            throw new Error(JSON.stringify(result,null,2));
         }
         return result;
     }
