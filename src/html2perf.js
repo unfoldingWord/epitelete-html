@@ -3,21 +3,37 @@ import { parse } from 'node-html-parser';
 
 const getAttribute = (node, key) => node.getAttribute(`data-${key}`);
 
+const chapterVerseFrom = node => ({
+    number: node.rawText,
+});
+
+const blockFrom = node => ({
+    content: getContentFrom(node) || [],
+});
+
+const graftFrom = node => ({
+    target: getAttribute(node, "target"),
+    nBlocks: parseInt(getAttribute(node, "nBlocks")),
+    previewText: "",
+    firstBlockScope: "",
+});
+
+const inlineGraftFrom = node => ({
+    type: "graft",
+    subType: getAttribute(node, "subType"),
+    target: getAttribute(node, "target"),
+    nBlocks: 1,
+    previewText: "",
+});
+
 const getContentFrom = contentNode => contentNode.childNodes.map((node) => {
     if (node.nodeType === 3) return node.rawText;
 
     const type = getAttribute(node, "type");
-    const block = {}
-    if (type === "inlineGraft") {
-        block.type = "graft";
-        block.subType = getAttribute(node, "subType");
-        block.target = getAttribute(node, "target");
-        block.nBlocks = 1;
-        block.previewText = "";
-    } else {
-        //Block is of type Chapter or Verses
-        block.type = type;
-        block.number = node.rawText;
+    const block = {
+        type,
+        ...(type === "inlineGraft" && inlineGraftFrom(node)),
+        ...(type !== "inlineGraft" && chapterVerseFrom(node)),
     }
 
     return block;
@@ -28,25 +44,12 @@ const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksLi
 
     const type = getAttribute(node, "type");
     const subType = type + 'Type';
-        
+
     const block = {
-        "type": type,
-        "subType": subType,
-    }
-
-    if (type === "block") {
-        const content = getContentFrom(node) || [];
-        block.content = content;
-    }
-
-    if (type === "graft") {
-        const target = getAttribute(node, "target");
-        const nBlocks = getAttribute(node, "nBlocks");
-        if (target) block.target = target;
-        if (nBlocks) block.nBlocks = parseInt(nBlocks);
-
-        block.previewText = ""
-        block.firstBlockScope = ""
+        type,
+        subType,
+        ...(type === "block" && blockFrom(node)),
+        ...(type === "graft" && graftFrom(node)),
     }
 
     blocksList.push(block);
