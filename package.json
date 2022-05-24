@@ -26,6 +26,8 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "epitelete": "0.0.3",
+    "node-html-parser": "^5.3.3",
+    "proskomma-json-validator": "^0.0.3",
     "proskomma-render-perf": "0.0.5"
   },
   "devDependencies": {
