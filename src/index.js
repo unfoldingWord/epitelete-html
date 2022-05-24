@@ -6,9 +6,8 @@ class EpiteletePerfHtml extends Epitelete{
         super(pk, docSetId);
     }
     async readHTML(bookCode) {
-        const perf = await super.readPerf(bookCode);
         const docSetId = this.docSetId;
-        const doc = perf.docSets[docSetId].documents[bookCode];
+        const doc = await super.readPerf(bookCode);
 
         const ret = {
             docSetId,
