@@ -3,7 +3,6 @@ import perf2html from "./perf2html"
 import html2perf from "./html2perf"
 import ProskommaJsonValidator from 'proskomma-json-validator';
 
-
 class EpiteletePerfHtml extends Epitelete{
     constructor(pk, docSetId) {
         super(pk, docSetId);
@@ -25,7 +24,8 @@ class EpiteletePerfHtml extends Epitelete{
 
     writeHTML(html) {
         const sequencePerf = html2perf(html);
-        const result = validator.validate(sequencePerf, {});
+        const validator = new ProskommaJsonValidator();
+        const result = validator.validate('key', sequencePerf);
         return result;
     }
 }
