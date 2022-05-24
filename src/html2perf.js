@@ -7,17 +7,6 @@ const chapterVerseFrom = node => ({
     number: node.rawText,
 });
 
-const blockFrom = node => ({
-    content: getContentFrom(node) || [],
-});
-
-const graftFrom = node => ({
-    target: getAttribute(node, "target"),
-    nBlocks: parseInt(getAttribute(node, "nBlocks")),
-    previewText: "",
-    firstBlockScope: "",
-});
-
 const inlineGraftFrom = node => ({
     type: "graft",
     subType: getAttribute(node, "subType"),
@@ -37,6 +26,17 @@ const getContentFrom = contentNode => contentNode.childNodes.map((node) => {
     }
 
     return block;
+});
+
+const blockFrom = node => ({
+    content: getContentFrom(node) || [],
+});
+
+const graftFrom = node => ({
+    target: getAttribute(node, "target"),
+    nBlocks: parseInt(getAttribute(node, "nBlocks")),
+    previewText: "",
+    firstBlockScope: "",
 });
 
 const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksList, node) => {
