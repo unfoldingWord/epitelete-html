@@ -33,13 +33,13 @@ test(
     `Reads HTML (${testGroup})`,
     async function (t) {
         try {
-            t.plan(2);
+            t.plan(3);
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
             const bookCode = "LUK"
             const html = await instance.readHTML(bookCode);
             t.ok(html);
             t.ok(/<[a-z][\s\S]*>/i.test(html), "Contains HTML elements");
-            console.log(instance.writeHTML(html));
+            t.doesNotThrow(instance.writeHTML(html));
 
         } catch (err) {
             console.log(err);

@@ -23,9 +23,12 @@ class EpiteletePerfHtml extends Epitelete{
     }
 
     writeHTML(html) {
-        const documentPerf = html2perf(html);
+        const sequencePerf = html2perf(html);
         const validator = new ProskommaJsonValidator();
-        const result = validator.validate('documentPerf', documentPerf);
+        const result = validator.validate('sequencePerf', sequencePerf);
+        if (!result.isValid) {
+            throw new Error(result.errors[0].message);
+        }
         return result;
     }
 }
