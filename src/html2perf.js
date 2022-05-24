@@ -8,7 +8,6 @@ function html2perf(html) {
     blocks: [],
     type: mainSequenceElement.getAttribute("data-sequenceType"),
     selected: true,
-    mainSequenceHtml
   }
   return perf;
 }
