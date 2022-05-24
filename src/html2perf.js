@@ -28,7 +28,10 @@ function html2perf(html) {
                 const block = {}
                 if (type === "inlineGraft") {
                     block.type = "graft";
-                    console.log({inlineGraft: curr.attributes});
+                    block.target = curr.getAttribute("data-target");
+                    block.subType = curr.getAttribute("data-subType");
+                    block.nBlocks = 1;
+                    // console.log({ inlineGraft: curr.attributes });
                 } else {
                     block.type = type;
                     block.number = curr.rawText;
@@ -54,8 +57,6 @@ function html2perf(html) {
         
         return prev;
     }, []);
-
-    // console.log({blocks});
 
     const perf = {
         blocks,
