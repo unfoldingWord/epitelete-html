@@ -7,6 +7,7 @@ function html2perf(html) {
   const perf = {
     blocks: [],
     type: mainSequenceElement.getAttribute("data-sequenceType"),
+    selected: true,
     mainSequenceHtml
   }
   return perf;
