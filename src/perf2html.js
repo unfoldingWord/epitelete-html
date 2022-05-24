@@ -10,7 +10,7 @@ const blockItemObjectHtml = bi => bi.type === 'graft' ? inlineGraftHtml(bi) : cv
 
 const inlineGraftHtml = ig => `<span data-type="inlineGraft" class="graft ${ig.subType}" data-subType="${ig.subType}" data-target="${ig.target}" data-nBlocks="${ig.nBlocks}" data-previewText="${previewText(ig)}"></span>${nnbsp}`;
 
-const cvObjectHtml = bi => `<span data-type="cv" class="${bi.type}">${bi.number}</span>`;
+const cvObjectHtml = bi => `<span data-type="${bi.type}" class="${bi.type}">${bi.number}</span>`;
 
 const previewText = g => g.subType in previewTextFormats ? previewTextFormats[g.subType](g) : g.previewText;
 
