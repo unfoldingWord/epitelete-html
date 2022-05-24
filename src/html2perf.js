@@ -17,11 +17,19 @@ function html2perf(html) {
             "subType": subType,
         }
 
-        const target = curr.getAttribute("data-target");
-        const nBlocks = curr.getAttribute("data-nBlocks");
+        if (type === "block"){
+            block.content = [];
+        }
+        
+        if (type === "graft") {
+            const target = curr.getAttribute("data-target");
+            const nBlocks = curr.getAttribute("data-nBlocks");
+            if (target) block.target = target;
+            if (nBlocks) block.nBlocks = parseInt(nBlocks);
 
-        if (target) block.target = target;
-        if (nBlocks) block.nBlocks = nBlocks;
+            block.previewText = ""
+            block.firstBlockScope = ""
+        }
 
         prev.push(block);
         
