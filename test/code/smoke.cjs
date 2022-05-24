@@ -39,7 +39,7 @@ test(
             const html = await instance.readHTML(bookCode);
             t.ok(html);
             t.ok(/<[a-z][\s\S]*>/i.test(html), "Contains HTML elements");
-            t.doesNotThrow(instance.writeHTML(html));
+            t.doesNotThrow(() => instance.writeHTML(html));
 
         } catch (err) {
             console.log(err);
