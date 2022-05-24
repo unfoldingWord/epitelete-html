@@ -8,7 +8,7 @@ function html2perf(html) {
     
     const blocks = blocksContainer.childNodes.reduce((prev, curr, idx) => {
         if (curr.nodeType !== 1) return prev;
-        
+
         const type = curr.getAttribute("data-type");
         const subType = type + 'Type';
         
@@ -16,10 +16,16 @@ function html2perf(html) {
             "type": type,
             "subType": subType,
         }
+
+        const target = curr.getAttribute("data-target");
+        if (target) block.target = target;
+
         prev.push(block);
         
         return prev;
     }, []);
+
+    // console.log({blocks});
 
     const perf = {
         blocks,
