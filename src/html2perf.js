@@ -18,7 +18,26 @@ function html2perf(html) {
         }
 
         if (type === "block"){
-            block.content = [];
+            const content = curr.childNodes?.reduce((prev, curr, idx) => {
+                if (curr.nodeType === 3) {
+                    prev.push(curr.rawText);
+                    return prev;
+                }
+                if (curr.nodeType !== 1) return prev;
+                const type = curr.getAttribute("data-type");
+                const block = {}
+                if (type === "inlineGraft") {
+                    block.type = "graft";
+                    console.log({inlineGraft: curr.attributes});
+                } else {
+                    block.type = type;
+                    block.number = curr.rawText;
+                }
+                prev.push(block);
+                return prev;
+            }, []) || [];
+            block.content = content;
+            // console.log(block);
         }
         
         if (type === "graft") {
@@ -36,7 +55,7 @@ function html2perf(html) {
         return prev;
     }, []);
 
-    console.log({blocks});
+    // console.log({blocks});
 
     const perf = {
         blocks,
