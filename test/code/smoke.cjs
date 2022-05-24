@@ -3,6 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const EpiteletePerfHtml = require("../../src/index").default;
+import html2perf from "../../src/html2perf"
 
 const testGroup = "Smoke";
 
@@ -38,6 +39,8 @@ test(
             const html = await instance.readHTML(bookCode);
             t.ok(html);
             t.ok(/<[a-z][\s\S]*>/i.test(html), "Contains HTML elements");
+            console.log(instance.writeHTML(html));
+
         } catch (err) {
             console.log(err);
         }
