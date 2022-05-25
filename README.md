@@ -15,9 +15,9 @@ const epiPerfHtml= new EpiteletePerfHtml(proskommaInstance, "doc_set_id");
 
 ### Html handling
 ```js
-const htmlContainer = await epiPerfHtml.readHTML(bookCode); // => object { docSetId, mainSequenceId, headers, sequenceHtml };
-const { sequenceHtml } = htmlContainer; //Array of html sequences { [sequenceId] : '<sequence html>'}
-//make changes to sequences html and merge them back to htmlContainer
+const htmlContainer = await epiPerfHtml.readHTML(bookCode); // => Object { docSetId, mainSequenceId, headers, sequenceHtml };
+const { sequenceHtml } = htmlContainer; //Object containing html sequences { [sequenceId] : '<sequence html>'}
+//Make changes to sequences html and merge them back to htmlContainer
 ...
 //write back the changed htmlContainer
 await epiPerfHtml.writeHTML(bookCode, sequenceId, changedHtmlContainer);
