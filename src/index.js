@@ -1,8 +1,6 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
-import ProskommaJsonValidator from 'proskomma-json-validator';
-
 class EpiteletePerfHtml extends Epitelete{
     constructor(pk, docSetId) {
         super(pk, docSetId);
