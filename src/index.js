@@ -1,8 +1,6 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
-import ProskommaJsonValidator from 'proskomma-json-validator';
-
 class EpiteletePerfHtml extends Epitelete{
     constructor(pk, docSetId) {
         super(pk, docSetId);
@@ -25,7 +23,7 @@ class EpiteletePerfHtml extends Epitelete{
 
     async writeHTML(bookCode,sequenceId,html) {
         const perf = html2perf(html,sequenceId);
-        await this.perfWrite(bookCode,sequenceId,perf);
+        await this.writePerf(bookCode,sequenceId,perf);
         return await this.readHTML(bookCode);
     }
 }
