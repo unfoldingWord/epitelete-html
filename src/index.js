@@ -14,13 +14,12 @@ class EpiteletePerfHtml extends Epitelete{
             sequences[seqId] = perf2html(doc, seqId);
             return sequences;
         }, []);
-        const ret = {
+        return {
             docSetId,
             mainSequenceId: doc.mainSequence,
             headers: doc.headers,
             sequenceHtml,
         };
-        return ret
     }
 
     writeHTML(html) {
