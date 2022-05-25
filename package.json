@@ -25,7 +25,7 @@
   "homepage": "https://github.com/unfoldingWord-box3/Epitelete-Perf-Html#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
-    "epitelete": "0.0.3",
+    "epitelete": "^0.0.4",
     "node-html-parser": "^5.3.3",
     "proskomma-json-validator": "0.0.4",
     "proskomma-render-perf": "0.0.5"
