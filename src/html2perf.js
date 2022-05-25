@@ -16,7 +16,7 @@ const inlineGraftFrom = node => ({
 });
 
 const getContentFrom = contentNode => contentNode.childNodes.map((node) => {
-    if (node.nodeType === 3) return node.rawText;
+    if (node.nodeType === 3) return node.rawText.replace(/&#8239;/,'');
 
     const type = getAttribute(node, "type");
     const block = {
@@ -43,7 +43,7 @@ const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksLi
     if (node.nodeType !== 1) return blocksList;
 
     const type = getAttribute(node, "type");
-    const subType = type + 'Type';
+    const subType = getAttribute(node, "subType");
 
     const block = {
         type,
@@ -56,15 +56,15 @@ const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksLi
     return blocksList;
 }, []);
 
-function html2perf(html) {
-    const mainSequenceHtml = parse(html.sequenceHtml[html.mainSequenceId]);
-    const mainSequenceElement = mainSequenceHtml.firstChild;
+function html2perf(html,sequenceId) {
+    const sequenceHtml = parse(html.sequenceHtml[sequenceId]);
+    const sequenceElement = sequenceHtml.firstChild;
 
-    const blocksContainer = mainSequenceElement.querySelector('.block, .graft').parentNode;
+    const blocksContainer = sequenceElement.querySelector('.block, .graft').parentNode;
     const blocks = getBlocksFrom(blocksContainer);
 
     const perf = {
-        type: getAttribute(mainSequenceElement, "sequenceType"),
+        type: getAttribute(sequenceElement, "sequenceType"),
         selected: true,
         blocks,
     }
