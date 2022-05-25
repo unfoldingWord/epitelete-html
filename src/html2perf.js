@@ -57,17 +57,16 @@ const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksLi
 }, []);
 
 function html2perf(html) {
-    const json = JSON.parse(html);
-    const mainSequenceHtml = parse(json.sequenceHtml[json.mainSequenceId]);
+    const mainSequenceHtml = parse(html.sequenceHtml[html.mainSequenceId]);
     const mainSequenceElement = mainSequenceHtml.firstChild;
 
     const blocksContainer = mainSequenceElement.querySelector('.block, .graft').parentNode;
     const blocks = getBlocksFrom(blocksContainer);
 
     const perf = {
-        blocks,
         type: getAttribute(mainSequenceElement, "sequenceType"),
         selected: true,
+        blocks,
     }
     // console.log(util.inspect(perf, false, null, true));
     return perf;

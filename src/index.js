@@ -10,16 +10,17 @@ class EpiteletePerfHtml extends Epitelete{
     async readHTML(bookCode) {
         const docSetId = this.docSetId;
         const doc = await super.readPerf(bookCode);
-
+        const sequenceHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
+            sequences[seqId] = perf2html(doc, seqId);
+            return sequences;
+        }, []);
         const ret = {
             docSetId,
             mainSequenceId: doc.mainSequence,
             headers: doc.headers,
-            sequenceHtml: {},
+            sequenceHtml,
         };
-        Object.keys(doc.sequences)
-            .forEach(seqId => { ret.sequenceHtml[seqId] = perf2html(doc, seqId) });
-        return JSON.stringify(ret, null, 2);
+        return ret
     }
 
     writeHTML(html) {
