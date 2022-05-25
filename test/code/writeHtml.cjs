@@ -34,7 +34,7 @@ test(
 );
 
 test(
-    `writeHTML (${testGroup})`,
+    `writeHTML consistency (${testGroup})`,
     async function (t) {
         try {
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
@@ -50,6 +50,27 @@ test(
             } catch (e) {
                 t.fail();
             }
+        } catch (err) {
+            console.log(err);
+        }
+        t.end();
+    },
+);
+
+test(
+    `writeHTML returns changes (${testGroup})`,
+    async function (t) {
+        try {
+            const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
+            const bookCode = "LUK"
+            const html = await instance.readHTML(bookCode);
+            t.ok(html);
+            //Change html sequence:
+            const editedHtmlSequence = html.sequenceHtml[html.mainSequenceId].replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
+            html.sequenceHtml[html.mainSequenceId] = editedHtmlSequence;
+            const newHtml = await instance.writeHTML(bookCode, html.mainSequenceId, html);
+            const newHtmlSequence = newHtml.sequenceHtml[newHtml.mainSequenceId];
+            t.ok(/Pequeña cigüeña dócil. /.test(newHtmlSequence));
         } catch (err) {
             console.log(err);
         }
