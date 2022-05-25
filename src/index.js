@@ -13,7 +13,7 @@ class EpiteletePerfHtml extends Epitelete{
         const sequenceHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
             sequences[seqId] = perf2html(doc, seqId);
             return sequences;
-        }, []);
+        }, {});
         return {
             docSetId,
             mainSequenceId: doc.mainSequence,
