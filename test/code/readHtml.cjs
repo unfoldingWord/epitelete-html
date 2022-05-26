@@ -18,7 +18,7 @@ test(
             t.plan(12);
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
             const bookCode = "LUK"
-            const html = await instance.readHTML(bookCode);
+            const html = await instance.readHtml(bookCode);
             t.ok(html);
             t.ok("docSetId" in html);
             t.ok("mainSequenceId" in html);
@@ -30,7 +30,7 @@ test(
             t.ok("toc" in html.headers);
             t.ok("toc2" in html.headers);
             t.ok("toc3" in html.headers);
-            t.ok("sequenceHtml" in html);
+            t.ok("sequencesHtml" in html);
         } catch (err) {
             console.log(err);
         }

@@ -6,10 +6,10 @@ class EpiteletePerfHtml extends Epitelete{
         super(pk, docSetId);
     }
 
-    async readHTML(bookCode) {
+    async readHtml(bookCode) {
         const docSetId = this.docSetId;
         const doc = await this.readPerf(bookCode);
-        const sequenceHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
+        const sequencesHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
             sequences[seqId] = perf2html(doc, seqId);
             return sequences;
         }, {});
@@ -17,14 +17,14 @@ class EpiteletePerfHtml extends Epitelete{
             docSetId,
             mainSequenceId: doc.mainSequence,
             headers: doc.headers,
-            sequenceHtml,
+            sequencesHtml,
         };
     }
 
-    async writeHTML(bookCode,sequenceId,html) {
-        const perf = html2perf(html,sequenceId);
+    async writeHtml(bookCode,sequenceId,perfHtml) {
+        const perf = html2perf(perfHtml,sequenceId);
         await this.writePerf(bookCode,sequenceId,perf);
-        return await this.readHTML(bookCode);
+        return await this.readHtml(bookCode);
     }
 }
 

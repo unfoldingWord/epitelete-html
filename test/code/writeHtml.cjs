@@ -13,16 +13,16 @@ const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "t
 pk.loadSuccinctDocSet(succinctJson);
 
 test(
-    `writeHTML doesn't die (${testGroup})`,
+    `writeHtml doesn't die (${testGroup})`,
     async function (t) {
         try {
             t.plan(2);
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
             const bookCode = "LUK"
-            const html = await instance.readHTML(bookCode);
+            const html = await instance.readHtml(bookCode);
             t.ok(html);
             try {
-                await instance.writeHTML(bookCode, html.mainSequenceId, html);
+                await instance.writeHtml(bookCode, html.mainSequenceId, html);
                 t.pass();
             } catch (e) {
                 t.fail();
@@ -34,17 +34,17 @@ test(
 );
 
 test(
-    `writeHTML consistency (${testGroup})`,
+    `writeHtml consistency (${testGroup})`,
     async function (t) {
         try {
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
             const bookCode = "LUK"
-            const html = await instance.readHTML(bookCode);
+            const html = await instance.readHtml(bookCode);
             t.ok(html);
             try {
-                const newHtml = await instance.writeHTML(bookCode, html.mainSequenceId, html);
-                const newHtmlSequence = newHtml.sequenceHtml[html.mainSequenceId];
-                const oldHtmlSequence = html.sequenceHtml[html.mainSequenceId];
+                const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
+                const newHtmlSequence = newHtml.sequencesHtml[html.mainSequenceId];
+                const oldHtmlSequence = html.sequencesHtml[html.mainSequenceId];
                 t.equal(newHtmlSequence, oldHtmlSequence);
                 t.pass();
             } catch (e) {
@@ -58,18 +58,18 @@ test(
 );
 
 test(
-    `writeHTML returns changes (${testGroup})`,
+    `writeHtml returns changes (${testGroup})`,
     async function (t) {
         try {
             const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
             const bookCode = "LUK"
-            const html = await instance.readHTML(bookCode);
+            const html = await instance.readHtml(bookCode);
             t.ok(html);
             //Change html sequence:
-            const editedHtmlSequence = html.sequenceHtml[html.mainSequenceId].replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
-            html.sequenceHtml[html.mainSequenceId] = editedHtmlSequence;
-            const newHtml = await instance.writeHTML(bookCode, html.mainSequenceId, html);
-            const newHtmlSequence = newHtml.sequenceHtml[newHtml.mainSequenceId];
+            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
+            html.sequencesHtml[html.mainSequenceId] = editedHtmlSequence;
+            const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
+            const newHtmlSequence = newHtml.sequencesHtml[newHtml.mainSequenceId];
             t.ok(/Pequeña cigüeña dócil. /.test(newHtmlSequence));
         } catch (err) {
             console.log(err);

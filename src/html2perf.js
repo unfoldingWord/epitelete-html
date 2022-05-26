@@ -57,8 +57,8 @@ const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksLi
 }, []);
 
 function html2perf(html,sequenceId) {
-    const sequenceHtml = parse(html.sequenceHtml[sequenceId]);
-    const sequenceElement = sequenceHtml.firstChild;
+    const sequencesHtml = parse(html.sequencesHtml[sequenceId]);
+    const sequenceElement = sequencesHtml.firstChild;
 
     const blocksContainer = sequenceElement.querySelector('.block, .graft').parentNode;
     const blocks = getBlocksFrom(blocksContainer);
