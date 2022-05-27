@@ -1,7 +1,8 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
-class EpiteletePerfHtml extends Epitelete{
+class EpiteletePerfHtml extends Epitelete {
+
     constructor({pk=null, docSetId}) {
         super({pk, docSetId});
     }
@@ -37,6 +38,7 @@ class EpiteletePerfHtml extends Epitelete{
         await this.writePerf(bookCode,sequenceId,perf);
         return await this.readHtml(bookCode);
     }
+
 }
 
 export default EpiteletePerfHtml;
