@@ -21,6 +21,12 @@ const { sequencesHtml } = htmlContainer; //Object containing html sequences { [s
 ...
 //write back the changed htmlContainer
 await epiPerfHtml.writeHtml(bookCode, sequenceId, changedHtmlContainer);
+...
+// undo
+await epiPerfHtml.undoHtml(bookCode);
+...
+// redo
+await epiPerfHtml.redoHtml(bookCode);
 ```
 
 ### Inherited functionality
