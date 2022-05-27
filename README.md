@@ -10,7 +10,7 @@ npm install epitelete-perf-html
 ```js
 import EpiteletePerfHtml from 'epitelete-perf-html';
 // Instantiate Proskomma and load some content into it
-const epiPerfHtml= new EpiteletePerfHtml(proskommaInstance, "doc_set_id");
+const epiPerfHtml= new EpiteletePerfHtml({pk: proskommaInstance, docSetId: "doc_set_id"});
 ```
 
 ### Html handling
