@@ -16,7 +16,7 @@ test(
     async function (t) {
         try {
             t.plan(12);
-            const instance = new EpiteletePerfHtml({pk, docSetId: "DBL/eng_engWEBBE"});
+            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             const html = await instance.readHtml(bookCode);
             t.ok(html);

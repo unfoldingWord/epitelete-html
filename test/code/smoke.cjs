@@ -15,12 +15,11 @@ test(
     `Instantiate Class (${testGroup})`,
     async function (t) {
         try {
-            t.plan(5)
-            t.throws(() => new EpiteletePerfHtml(pk), "2 arguments");
-            t.throws(() => new EpiteletePerfHtml({pk, docSetId: "DBL/fra_fraLSG"}), "docSetId is not present");
-            const instance = new EpiteletePerfHtml({pk, docSetId: "DBL/eng_engWEBBE"});
+            t.plan(4)
+            t.throws(() => new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/fra_fraLSG"}), "docSetId is not present");
+            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             t.ok(instance);
-            t.ok(instance.pk);
+            t.ok(instance.proskomma);
             t.ok(instance.docSetId);
         } catch (err) {
             console.log(err);
