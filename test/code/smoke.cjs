@@ -17,8 +17,8 @@ test(
         try {
             t.plan(5)
             t.throws(() => new EpiteletePerfHtml(pk), "2 arguments");
-            t.throws(() => new EpiteletePerfHtml(pk, "eBible/fra_fraLSG"), "docSetId is not present");
-            const instance = new EpiteletePerfHtml(pk, "DBL/eng_engWEBBE");
+            t.throws(() => new EpiteletePerfHtml({pk, docSetId: "DBL/fra_fraLSG"}), "docSetId is not present");
+            const instance = new EpiteletePerfHtml({pk, docSetId: "DBL/eng_engWEBBE"});
             t.ok(instance);
             t.ok(instance.pk);
             t.ok(instance.docSetId);
