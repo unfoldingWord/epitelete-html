@@ -3,8 +3,8 @@ import perf2html from "./perf2html"
 import html2perf from "./html2perf"
 class EpiteletePerfHtml extends Epitelete {
 
-    constructor({proskomma=null, docSetId}) {
-        super({proskomma, docSetId});
+    constructor({proskomma=null, docSetId, options={}}) {
+        super({proskomma, docSetId, options});
     }
 
     _outputHtml(doc) {
