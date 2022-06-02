@@ -1,5 +1,3 @@
-const nnbsp = "&#8239;";
-
 const bgHtml = bg => `    <div  data-type="graft" class="graft ${bg.subType}${bg.subType === "heading" ? " " + bg.firstBlockScope: ''}" data-subType="${bg.subType}" data-target="${bg.target}" data-nBlocks="${bg.nBlocks}" data-previewText=""></div>`;
 
 const blockHtml = b => `    <div data-type="block" class="block ${b.subType}" data-subType="${b.subType}">${b.content.map(bc => blockItemHtml(bc)).join('')}</div>`;
@@ -8,7 +6,7 @@ const blockItemHtml = bi => (typeof bi === 'string') ? bi : blockItemObjectHtml(
 
 const blockItemObjectHtml = bi => bi.type === 'graft' ? inlineGraftHtml(bi) : cvObjectHtml(bi);
 
-const inlineGraftHtml = ig => `<span data-type="inlineGraft" class="graft ${ig.subType}" data-subType="${ig.subType}" data-target="${ig.target}" data-nBlocks="${ig.nBlocks}" data-previewText=""></span>${nnbsp}`;
+const inlineGraftHtml = ig => `<span data-type="inlineGraft" class="graft ${ig.subType}" data-subType="${ig.subType}" data-target="${ig.target}" data-nBlocks="${ig.nBlocks}" data-previewText=""></span>`;
 
 const cvObjectHtml = bi => `<span data-type="${bi.type}" class="${bi.type}">${bi.number}</span>`;
 

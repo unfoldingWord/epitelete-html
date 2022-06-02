@@ -15,7 +15,7 @@ const inlineGraftFrom = node => ({
 });
 
 const getContentFrom = contentNode => Array.from(contentNode.childNodes, node => {
-    if (node.nodeType === 3) return node.textContent.replace(/&#8239;| /, "");
+    if (node.nodeType === 3) return node.textContent;
 
     const type = getAttribute(node, "type");
     const block = {
@@ -53,13 +53,11 @@ const nodeJsGetBlocks = nodes => nodes.reduce((blocksList, node) => {
     if (node.nodeType !== 1) return blocksList;
     blocksList.push(getBlock(node));
     return blocksList;
-}, [])
+}, []);
 
-const getBlocksFrom = containerNode => {
-    return typeof containerNode.children === "object"
-        ? browserGetBlocks(containerNode.children)
-        : nodeJsGetBlocks(containerNode.childNodes)
-};
+const getBlocksFrom = containerNode => (typeof containerNode.children === "object")
+    ? browserGetBlocks(containerNode.children)
+    : nodeJsGetBlocks(containerNode.childNodes);
 
 const parseHtml = (html) => (typeof DOMParser === "function")
     ? new DOMParser().parseFromString(html, "text/html")
@@ -73,7 +71,7 @@ function html2perf(perfHtml,sequenceId) {
     return {
         type: getAttribute(sequenceElement, "sequenceType"),
         selected: true,
-        blocks: getBlocksFrom(blocksContainer)
+        blocks: getBlocksFrom(blocksContainer),
     };
 }
 
