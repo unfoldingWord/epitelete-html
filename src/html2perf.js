@@ -62,7 +62,7 @@ const getBlocksFrom = containerNode => {
 };
 
 const parseHtml = (html) => (typeof DOMParser === "function")
-    ? new DOMParser().parseFromhtml(html, "text/html")
+    ? new DOMParser().parseFromString(html, "text/html")
     : parse(html);
 
 function html2perf(perfHtml,sequenceId) {
