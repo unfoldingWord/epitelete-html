@@ -1,10 +1,9 @@
-import { parse } from 'node-html-parser';
-// const util = require('util')
+import { parse } from "node-html-parser";
 
 const getAttribute = (node, key) => node.getAttribute(`data-${key}`);
 
 const chapterVerseFrom = node => ({
-    number: node.rawText,
+    number: node.textContent,
 });
 
 const inlineGraftFrom = node => ({
@@ -15,8 +14,8 @@ const inlineGraftFrom = node => ({
     previewText: "",
 });
 
-const getContentFrom = contentNode => contentNode.childNodes.map((node) => {
-    if (node.nodeType === 3) return node.rawText.replace(/&#8239;/,'');
+const getContentFrom = contentNode => Array.from(contentNode.childNodes, node => {
+    if (node.nodeType === 3) return node.textContent.replace(/&#8239;| /, "");
 
     const type = getAttribute(node, "type");
     const block = {
@@ -24,7 +23,6 @@ const getContentFrom = contentNode => contentNode.childNodes.map((node) => {
         ...(type === "inlineGraft" && inlineGraftFrom(node)),
         ...(type !== "inlineGraft" && chapterVerseFrom(node)),
     }
-
     return block;
 });
 
@@ -39,37 +37,44 @@ const graftFrom = node => ({
     firstBlockScope: "",
 });
 
-const getBlocksFrom = containerNode => containerNode.childNodes.reduce((blocksList, node) => {
-    if (node.nodeType !== 1) return blocksList;
-
+const getBlock = node => {
     const type = getAttribute(node, "type");
-    const subType = getAttribute(node, "subType");
-
-    const block = {
+    return {
         type,
-        subType,
+        subType: getAttribute(node, "subType"),
         ...(type === "block" && blockFrom(node)),
         ...(type === "graft" && graftFrom(node)),
     }
+}
 
-    blocksList.push(block);
+const browserGetBlocks = nodes => Array.from(nodes, node => getBlock(node));
+
+const nodeJsGetBlocks = nodes => nodes.reduce((blocksList, node) => {
+    if (node.nodeType !== 1) return blocksList;
+    blocksList.push(getBlock(node));
     return blocksList;
-}, []);
+}, [])
 
-function html2perf(html,sequenceId) {
-    const sequencesHtml = parse(html.sequencesHtml[sequenceId]);
-    const sequenceElement = sequencesHtml.firstChild;
+const getBlocksFrom = containerNode => {
+    return typeof containerNode.children === "object"
+        ? browserGetBlocks(containerNode.children)
+        : nodeJsGetBlocks(containerNode.childNodes)
+};
 
-    const blocksContainer = sequenceElement.querySelector('.block, .graft').parentNode;
-    const blocks = getBlocksFrom(blocksContainer);
+const parseHtml = (html) => (typeof DOMParser === "function")
+    ? new DOMParser().parseFromString(html, "text/html")
+    : parse(html);
 
-    const perf = {
+function html2perf(perfHtml,sequenceId) {
+    const sequencesHtml = parseHtml(perfHtml.sequencesHtml[sequenceId]);
+    const sequenceElement = sequencesHtml.getElementById("sequence");
+    const blocksContainer = sequenceElement.querySelector(".block, .graft").parentNode;
+
+    return {
         type: getAttribute(sequenceElement, "sequenceType"),
         selected: true,
-        blocks,
-    }
-    // console.log(util.inspect(perf, false, null, true));
-    return perf;
+        blocks: getBlocksFrom(blocksContainer)
+    };
 }
 
 export default html2perf;
