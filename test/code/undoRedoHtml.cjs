@@ -23,7 +23,7 @@ test(
             // Change and write sequence:
             t.ok('mainSequenceId' in htmlWeRead);
             const editedHtmlSequence = htmlWeRead.sequencesHtml[htmlWeRead.mainSequenceId]
-                .replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
+                .replace(/1<\/span>/, '"1</span>Pequeña cigüeña dócil. ');
             htmlWeRead.sequencesHtml[htmlWeRead.mainSequenceId] = editedHtmlSequence;
             const htmlFromWrite = await instance.writeHtml(bookCode, htmlWeRead.mainSequenceId, htmlWeRead);
             const htmlWeWriteSequence = htmlFromWrite.sequencesHtml[htmlFromWrite.mainSequenceId];
