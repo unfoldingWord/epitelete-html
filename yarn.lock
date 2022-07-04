@@ -1581,15 +1581,16 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-epitelete@^0.1.5:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.1.4.tgz#a9e22578df40d5cd0111f7652f035b433795dc31"
-  integrity sha512-rAu6H/lmlDcZYsj7AmLSlgvjLPc7mASI1IDLCIZX8Y6AOf++BY2IwQNZp+Dxl6YBP40XIZg15a4J5c+jcImgqA==
+epitelete@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.0.tgz#85f8d4197c3c1124422010f816c0da5611887251"
+  integrity sha512-j0jL/b9nz/QOz1Wvx+08IYtbRWrnwiVJ/DePMPr2q+td85Qmz+ERxe3pv+1VSy2q1x3Tx8eZvMJXMBxqtwwn6w==
   dependencies:
     "@babel/core" "^7.17.10"
     lodash "4.17.21"
+    proskomma-json-tools "^0.1.0"
     proskomma-json-validator "^0.0.5"
-    proskomma-render-perf "0.0.6"
+    proskomma-render-perf "0.2.0"
 
 es-abstract@^1.19.0, es-abstract@^1.19.5, es-abstract@^1.20.0:
   version "1.20.1"
@@ -2612,6 +2613,14 @@ prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
+proskomma-json-tools@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.1.0.tgz#977174d28c433c4484dfcac17aceaceeec948637"
+  integrity sha512-WvKp1DEIs9nGiA4zWAGHHEKLuY8f9RSsMg/HqKpDhDmOe7IqqKZIYdw0mt9a8C931NU6FNdzX0iQYEMBMNPMoA==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    ajv "^8.11.0"
+
 proskomma-json-validator@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/proskomma-json-validator/-/proskomma-json-validator-0.0.5.tgz#ce71cbe9f18bdf6b9b4c63e5f5291d1cb50dbc4d"
@@ -2620,25 +2629,17 @@ proskomma-json-validator@^0.0.5:
     "@babel/core" "^7.17.10"
     ajv "^8.11.0"
 
-proskomma-render-json@0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/proskomma-render-json/-/proskomma-render-json-0.0.7.tgz#b66ab38ee043b523be29dda52a9afc79176f2fa5"
-  integrity sha512-vcMjn8Rge6MYtlSD5Ew9uEw40Qg7VmM61vA9wTt93+0JkxiM/1subMxM7AUdordtaCNUgf3FTyw9ioZPRAdMOw==
-  dependencies:
-    "@babel/core" "^7.17.10"
-    proskomma-render "^0.6.1"
-
-proskomma-render-perf@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/proskomma-render-perf/-/proskomma-render-perf-0.0.6.tgz#f9d27a88f52fb70527f3d69fceba22b1c163c4cc"
-  integrity sha512-AUwap7IL4J7Qwj0iy93eiZHQGlQxDHJMsdDkketAm0dljTxhqJ8hqddgAzYRpxUXoOH7mZvUL16Yoc/V9Z2wcQ==
+proskomma-render-perf@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/proskomma-render-perf/-/proskomma-render-perf-0.2.0.tgz#9f8cea96c7c5c05e6483e4e739d7b2ba9a4afc90"
+  integrity sha512-75tn++fIIccHoxK6bZWAHGPJSGjNQpDu31sinadU0O38vdWIG38v/3vpd/qVu1C7R+zLTNJYjmfUHzHXKh7Gsg==
   dependencies:
     "@babel/core" "^7.17.10"
     ajv "^8.11.0"
+    proskomma-json-tools "^0.1.0"
     proskomma-render "^0.6.0"
-    proskomma-render-json "0.0.7"
 
-proskomma-render@^0.6.0, proskomma-render@^0.6.1:
+proskomma-render@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/proskomma-render/-/proskomma-render-0.6.1.tgz#94a524d52cf79e8686e3169354d1afb2c76ce5e5"
   integrity sha512-mdZShaodxpL3xx+yDo29CmJzazp9jo9OwS5nC0kDtWroFc4EWXN0SUwosE7hRFv00H9Sav+Bon1CTJfRqo3wcA==

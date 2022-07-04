@@ -18,14 +18,16 @@ test(
         try {
             t.plan(2);
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
-            const bookCode = "LUK"
+            const bookCode = "3JN"
             const html = await instance.readHtml(bookCode);
             t.ok(html);
+            // console.log(html.sequencesHtml);
             try {
                 await instance.writeHtml(bookCode, html.mainSequenceId, html);
                 t.pass();
             } catch (e) {
-                t.fail();
+                console.log(e);
+                t.fail(e);
             }
         } catch (err) {
             console.log(err);
@@ -66,7 +68,7 @@ test(
             const html = await instance.readHtml(bookCode);
             t.ok(html);
             //Change html sequence:
-            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
+            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/1<\/span>/, '1</span>Pequeña cigüeña dócil. ');
             html.sequencesHtml[html.mainSequenceId] = editedHtmlSequence;
             const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
             const newHtmlSequence = newHtml.sequencesHtml[newHtml.mainSequenceId];

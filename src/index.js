@@ -1,6 +1,7 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
+
 class EpiteletePerfHtml extends Epitelete {
 
     constructor({proskomma=null, docSetId, options={}}) {
@@ -14,8 +15,9 @@ class EpiteletePerfHtml extends Epitelete {
         }, {});
         return {
             docSetId: this.docSetId,
-            mainSequenceId: doc.mainSequence,
-            headers: doc.headers,
+            mainSequenceId: doc.main_sequence_id,
+            schema: doc.schema,
+            metadata: doc.metadata,
             sequencesHtml,
         };
 
@@ -34,7 +36,7 @@ class EpiteletePerfHtml extends Epitelete {
     }
 
     async writeHtml(bookCode,sequenceId,perfHtml) {
-        const perf = html2perf(perfHtml,sequenceId);
+        const perf = html2perf(perfHtml, sequenceId);
         await this.writePerf(bookCode,sequenceId,perf);
         return await this.readHtml(bookCode);
     }

@@ -15,6 +15,7 @@ test(
     `read; write; undo; redo (${testGroup})`,
     async function (t) {
         try {
+            t.plan(5);
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             // Read
@@ -23,7 +24,7 @@ test(
             // Change and write sequence:
             t.ok('mainSequenceId' in htmlWeRead);
             const editedHtmlSequence = htmlWeRead.sequencesHtml[htmlWeRead.mainSequenceId]
-                .replace(/"verses">1<\/span>/, '"verses">1</span>Pequeña cigüeña dócil. ');
+                .replace(/1<\/span>/, '"1</span>Pequeña cigüeña dócil. ');
             htmlWeRead.sequencesHtml[htmlWeRead.mainSequenceId] = editedHtmlSequence;
             const htmlFromWrite = await instance.writeHtml(bookCode, htmlWeRead.mainSequenceId, htmlWeRead);
             const htmlWeWriteSequence = htmlFromWrite.sequencesHtml[htmlFromWrite.mainSequenceId];

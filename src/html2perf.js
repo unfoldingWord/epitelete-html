@@ -3,50 +3,80 @@ import { parse } from "node-html-parser";
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
 
-const getAttribute = (node, key) => node.getAttribute(`data-${key}`);
+const getAttributes = (node) => {
+    const atts = node.attributes;
+    return !atts.length
+    ? typeof atts === 'object' && atts
+    : [...atts].reduce((atts, att) => {
+        atts[att.name] = att.value;
+        return atts;
+    }, {});
+}
 
-const chapterVerseFrom = node => ({
-    number: node.textContent,
-});
+const camelToKebabCase = str => str.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
 
-const inlineGraftFrom = node => ({
-    type: "graft",
-    subType: getAttribute(node, "subType"),
-    target: getAttribute(node, "target"),
-    nBlocks: 1,
-    previewText: "",
-});
+const kebabDataSet = (target) => Object.keys(target).reduce((dataset, key) => {
+    const newKey = camelToKebabCase(key);
+    dataset[newKey] = target[key]
+    return dataset;
+}, {});
+
+const getDataset = (node) => {
+    const dataSet = node.dataset;
+    if (dataSet) return kebabDataSet(dataSet);
+    const atts = getAttributes(node);
+    return atts && Object.keys(atts).reduce((dataset, key) => {
+        const data = key.match(/(?<=data-).+/);
+        if(data) dataset[data] = atts[key];
+        return dataset
+    }, {})
+}
+
+const getProps = (node) => {
+    const { "sub_type-ns": subTypeNs, sub_type: subType, ...props } = getDataset(node);
+    const sub_type = { sub_type: subTypeNs ? `${subTypeNs}:${subType}` : subType };
+    const propsWithAtts = props && Object.keys(props).reduce((newProps, key) => {
+        const att = key.match(/(?<=atts-).+/);
+        if (att) {
+            if (!newProps.atts) newProps.atts = {}
+            newProps.atts[att] = props[key]
+        }
+        else newProps[key] = props[key];
+        return newProps
+    }, {})
+    return {
+        ...propsWithAtts,
+        ...sub_type,
+    }
+}
 
 const getContentFrom = contentNode => Array.from(contentNode.childNodes, node => {
     if (node.nodeType === TEXT_NODE) return node.textContent;
 
-    const type = getAttribute(node, "type");
+    const props = getProps(node);
+    const contents = node.childNodes;
     const block = {
-        type,
-        ...(type === "inlineGraft" && inlineGraftFrom(node)),
-        ...(type !== "inlineGraft" && chapterVerseFrom(node)),
+        ...props,
+        ...(contents?.length && contents.reduce((contents, node) => {
+            if (node.nodeType === TEXT_NODE) return contents;
+            return {...contents, ...blockFrom(node)}
+        }, {}))
     }
     return block;
 });
 
-const blockFrom = node => ({
-    content: getContentFrom(node) || [],
-});
-
-const graftFrom = node => ({
-    target: getAttribute(node, "target"),
-    nBlocks: parseInt(getAttribute(node, "nBlocks")),
-    previewText: "",
-    firstBlockScope: "",
-});
+const blockFrom = node => {
+    const content = node.classList && [...node.classList.values()][0];
+    return {
+        [content]: getContentFrom(node) || [],
+    }
+};
 
 const getBlock = node => {
-    const type = getAttribute(node, "type");
+    const props = getProps(node);
     return {
-        type,
-        subType: getAttribute(node, "subType"),
-        ...(type === "block" && blockFrom(node)),
-        ...(type === "graft" && graftFrom(node)),
+        ...props,
+        ...(props.type === "paragraph" && blockFrom(node.firstChild)),
     }
 }
 
@@ -66,14 +96,14 @@ const parseHtml = (html) => (typeof DOMParser === "function")
     ? new DOMParser().parseFromString(html, "text/html")
     : parse(html);
 
-function html2perf(perfHtml,sequenceId) {
+function html2perf(perfHtml, sequenceId) {
     const sequencesHtml = parseHtml(perfHtml.sequencesHtml[sequenceId]);
-    const sequenceElement = sequencesHtml.getElementById("sequence");
-    const blocksContainer = sequenceElement.querySelector(".block, .graft").parentNode;
+    const sequenceElement = sequencesHtml.getElementById(sequenceId);
+    const blocksContainer = sequenceElement.querySelector(".paragraph, .graft").parentNode;
+    const props = getDataset(sequenceElement);
 
     return {
-        type: getAttribute(sequenceElement, "sequenceType"),
-        selected: true,
+        ...props,
         blocks: getBlocksFrom(blocksContainer),
     };
 }
