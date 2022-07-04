@@ -15,6 +15,7 @@ test(
     `read; write; undo; redo (${testGroup})`,
     async function (t) {
         try {
+            t.plan(5);
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             // Read

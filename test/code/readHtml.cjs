@@ -15,6 +15,7 @@ test(
     `Reads HTML (${testGroup})`,
     async function (t) {
         try {
+            t.plan(24);
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             const html = await instance.readHtml(bookCode);
