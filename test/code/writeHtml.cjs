@@ -38,6 +38,7 @@ test(
 test(
     `writeHtml consistency (${testGroup})`,
     async function (t) {
+        t.plan(3);
         try {
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
@@ -55,13 +56,13 @@ test(
         } catch (err) {
             console.log(err);
         }
-        t.end();
     },
 );
 
 test(
     `writeHtml returns changes (${testGroup})`,
     async function (t) {
+        t.plan(2);
         try {
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
@@ -76,6 +77,5 @@ test(
         } catch (err) {
             console.log(err);
         }
-        t.end();
     },
 );

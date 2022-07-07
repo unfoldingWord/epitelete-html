@@ -46,6 +46,5 @@ test(
         } catch (err) {
             console.log(err);
         }
-        t.end();
     },
 );
