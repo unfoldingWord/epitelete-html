@@ -1,0 +1,10 @@
+{
+  "className": {
+    "main_sequence": "sequence_main"
+  },
+  "tagName": {
+    "t:main": "section",
+    "t:paragraph/s:usfm:p": "p",
+    "s:verses": "sub"
+  }
+}

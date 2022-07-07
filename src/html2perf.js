@@ -67,6 +67,11 @@ const getContentFrom = (contentNode) =>
     if (node.nodeType === TEXT_NODE) return node.textContent;
     const props = getProps(node);
     const contents = node.childNodes;
+    try {
+    } catch (error) {
+      console.error(error);
+      console.log(contents.length);
+    }
     const block = {
       ...props,
       ...(contents?.length &&
