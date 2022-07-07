@@ -47,7 +47,10 @@ const contentElementHtml = (element) => {
         return ["chapter", "verses"].includes(subType) ? atts.number : "";
       },
       wrapperHtml: () => {
-        return contentHtml(content,"content") + contentHtml(meta_content,"meta-content");
+        return (
+          contentHtml(content, "content") +
+          contentHtml(meta_content, "meta-content")
+        );
       }
     };
     const getContentHtml = getters[`${type}Html`];
@@ -95,7 +98,6 @@ const blockHtml = (block) => {
 
 const sequenceHtml = (perfSequence, sequenceId) => {
   const { blocks, ...props } = perfSequence;
-
   return createElement({
     id: `${sequenceId}`,
     classList: `sequence ${perfSequence.type} ${perfSequence.type}_sequence`,
