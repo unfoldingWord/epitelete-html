@@ -4,9 +4,9 @@ import html2perf from "./html2perf"
 
 class EpiteletePerfHtml extends Epitelete {
 
-    constructor({proskomma=null, docSetId, options={}}) {
+    constructor({proskomma=null, docSetId, htmlMap, options={}}) {
         super({ proskomma, docSetId, options });
-        this.htmlMap = options.htmlMap
+        this.htmlMap = htmlMap
     }
 
     _outputHtml(doc) {
@@ -21,7 +21,6 @@ class EpiteletePerfHtml extends Epitelete {
             metadata: doc.metadata,
             sequencesHtml,
         };
-
     }
 
     async readHtml(bookCode) {

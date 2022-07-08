@@ -37,13 +37,13 @@ export const tagNameMap = ({
   defaultTagName = undefined,
   htmlMap: { tagName }
 }) =>
-  tagName[`t:${type}/s:${subType}`] ||
-  tagName[`t:${type}`] ||
-  tagName[`s:${subType}`] ||
+  tagName?.[`t:${type}/s:${subType}`] ||
+  tagName?.[`t:${type}`] ||
+  tagName?.[`s:${subType}`] ||
   defaultTagName;
 
 export const classNameMap = ({ classList, htmlMap: { className } }) =>
-  classList.map((value) => className[value] ?? value);
+  classList.map((value) => className?.[value] ?? value);
 
 export const getBooleanProps = (props) =>
   !!props ? Object.keys(props).filter((key) => props[key] === true) : [];
