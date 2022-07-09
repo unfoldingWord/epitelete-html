@@ -33,7 +33,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     } = element;
     const attsProps = handleAtts(atts);
     const subTypes = handleSubtypeNS(subType);
-    const { classList, tagName } = mapHtml({type, subType, htmlMap: htmlMap});
+    const { classList, tagName } = mapHtml({type, subType, htmlMap});
     const innerHtml = () => {
       const getters = {
         markHtml: () => ["chapter", "verses"].includes(subType) ? atts.number : "",
@@ -55,7 +55,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     const { type, sub_type: subType, atts, content, ...props } = block;
     const attsProps = handleAtts(atts);
     const subTypes = handleSubtypeNS(subType);
-    const { classList, tagName } = mapHtml({type, subType, htmlMap: htmlMap});
+    const { classList, tagName } = mapHtml({type, subType, htmlMap});
     return createElement({
       tagName,
       classList,
