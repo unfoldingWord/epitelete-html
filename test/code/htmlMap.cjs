@@ -19,20 +19,30 @@ test(`Maps correctly with htmlMap (${testGroup})`, async function (t) {
       proskomma: pk,
       docSetId: "DBL/eng_engWEBBE",
       htmlMap: {
-        className: {
-          "sequence": newClass
+        "*": {
+          sequence: {
+            classList: newClass
+          },
+          verses: {
+            tagName:"custom1"
+          }
         },
-        tagName: {
-          "t:main": "custom1",
-          "t:paragraph/s:usfm:p": "custom2",
-          "s:verses": "custom3"
+        main: {
+          "*": {
+            tagName: "custom2",
+          },
+        },
+        paragraph: {
+          "usfm:p": {
+            tagName: "custom3"
+          }
         }
       }
     });
     const bookCode = "LUK"
     const html = await instance.readHtml(bookCode);
     t.ok(html.sequencesHtml[html.mainSequenceId].includes(newClass));
-    t.notOk(html.sequencesHtml[html.mainSequenceId].includes("sequence "));
+    t.notOk(html.sequencesHtml[html.mainSequenceId].includes("sequence"));
 
     t.ok(["<custom1", "<custom2", "<custom3"].every((value) => html.sequencesHtml[html.mainSequenceId].includes(value)));
   } catch (err) {

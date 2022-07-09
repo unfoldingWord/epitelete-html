@@ -1,10 +1,20 @@
 {
-  "className": {
-    "main_sequence": "sequence_main"
+  "*": {
+    "*": {
+      "tagName": "span"
+    },
+    "sequence":{
+      "tagName": "section"
+    }
   },
-  "tagName": {
-    "t:main": "section",
-    "t:paragraph/s:usfm:p": "p",
-    "s:verses": "sub"
+  "paragraph": {
+    "*": {
+      "tagName": "p"
+    }
+  },
+  "mark": {
+    "*": {
+      "tagName": "span"
+    }
   }
 }
