@@ -1,4 +1,4 @@
-import defaultHtmlMap from "./htmlmap.json";
+import defaultHtmlMap from "./htmlmap.js";
 import {
   createElement,
   handleAtts,
@@ -41,7 +41,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     } = element;
     const attsProps = handleAtts(atts);
     const subTypes = handleSubtypeNS(subType);
-    const { classList, tagName } = mapHtml({type, subType, htmlMap});
+    const { classList, tagName, id } = mapHtml({ props:{ type, subType, atts, ...props }, htmlMap });
     const innerHtml = (content) => {
       const getters = {
         markHtml: () => ["chapter", "verses"].includes(subType) ? atts.number : "",
@@ -53,6 +53,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
 
     return createElement({
       tagName,
+      id,
       classList,
       dataset: { type, ...subTypes, ...attsProps, ...props},
       children: innerHtml(content)
@@ -63,9 +64,10 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     const { type, sub_type: subType, atts, content, ...props } = block;
     const attsProps = handleAtts(atts);
     const subTypes = handleSubtypeNS(subType);
-    const { classList, tagName } = mapHtml({type, subType, htmlMap});
+    const { classList, tagName, id } = mapHtml({ props:{ type, subType, atts, ...props }, htmlMap });
     return createElement({
       tagName,
+      id,
       classList,
       dataset: { type, ...subTypes, ...attsProps, ...props },
       children: contentChildren(content)
@@ -74,7 +76,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
 
   const sequenceHtml = (perfSequence, sequenceId) => {
     const { blocks, ...props } = perfSequence;
-    const { classList, tagName } = mapHtml({ type: props.type, subType: "sequence", htmlMap });
+    const { classList, tagName } = mapHtml({ props: {...props, subType: "sequence"}, htmlMap });
     return createElement({
       tagName,
       id: `${sequenceId}`,

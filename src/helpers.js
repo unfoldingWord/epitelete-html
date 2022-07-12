@@ -34,7 +34,8 @@ export const createElement = (
   }
 ) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset})}>${children}</${tagName || "div"}>`;
 
-export const mapHtml = ({ type, subType, htmlMap }) => {
+export const mapHtml = ({ props, htmlMap }) => {
+  const { type, subType } = props;
   const setDefaultClassList = (type, subType) => [...(type ? [type] : []), ...(subType ? [subType.replace(":", " ")] : [])];
 
   if (!htmlMap) return { classList: setDefaultClassList(type, subType) };
@@ -47,15 +48,20 @@ export const mapHtml = ({ type, subType, htmlMap }) => {
   ];
 
   const getClassList = (classList) => classList && (Array.isArray(classList) ? classList : [classList]); 
-  const result = maps.reduce((result, map) => {
-    result.classList = result.classList.concat(getClassList(map?.classList) || []);
-    if (!result.tagName && map?.tagName) result.tagName = map.tagName;
-    return result;
-  }, { classList: [], tagName: "" });
+  const result = maps.reduce((_result, map) => {
+    const _map = map || {};
+    const { classList, tagName, id } = (typeof _map === 'function') ? _map(props) : _map;
+
+    _result.classList = _result.classList.concat(getClassList(classList) || []);
+    if (!_result.tagName && tagName) _result.tagName = tagName;
+    if (!_result.id && id) _result.id = id;
+    return _result;
+  }, { classList: [], tagName: ""});
 
   return {
     classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subType),
-    tagName: result.tagName
+    tagName: result.tagName,
+    id: result.id
   }
 }
 
