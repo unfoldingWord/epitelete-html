@@ -11,7 +11,9 @@
     "rawTest": "babel-tape-runner test/code/*.cjs",
     "oneTest": "babel-tape-runner test/code/%TESTSCRIPT%.cjs",
     "build": "babel src -d dist",
-    "prepublishOnly": "rm -fr dist && npm run build"
+    "prepublishOnly": "rm -fr dist && npm run build",
+    "generatePerf": "babel-tape-runner utils/generatePerf.js",
+    "generatePerfHtml": "babel-tape-runner utils/generatePerfHtml.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "babel-tape-runner": "^3.0.0",
     "eslint": "^8.15.0",
     "fs-extra": "^10.1.0",
+    "js-beautify": "^1.14.4",
     "path": "^0.12.7",
     "tap-summary": "^4.0.0",
     "tape": "^5.5.3",
