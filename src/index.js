@@ -4,13 +4,14 @@ import html2perf from "./html2perf"
 
 class EpiteletePerfHtml extends Epitelete {
 
-    constructor({proskomma=null, docSetId, options={}}) {
-        super({proskomma, docSetId, options});
+    constructor({proskomma=null, docSetId, htmlMap, options={}}) {
+        super({ proskomma, docSetId, options });
+        this.htmlMap = htmlMap
     }
 
     _outputHtml(doc) {
         const sequencesHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
-            sequences[seqId] = perf2html(doc, seqId);
+            sequences[seqId] = perf2html(doc, seqId, this.htmlMap);
             return sequences;
         }, {});
         return {
@@ -20,7 +21,6 @@ class EpiteletePerfHtml extends Epitelete {
             metadata: doc.metadata,
             sequencesHtml,
         };
-
     }
 
     async readHtml(bookCode) {
