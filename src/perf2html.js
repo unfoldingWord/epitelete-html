@@ -7,6 +7,14 @@ import {
 } from "./helpers";
 
 function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
+  const contentChildren = (content) => content?.reduce(
+    (contentHtml, element) =>
+      contentHtml += (typeof element === "string")
+        ? element
+        : contentElementHtml(element),
+    ""
+  );
+
   const contentHtml = (content, className) =>
     content
       ? createElement({
@@ -34,10 +42,10 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     const attsProps = handleAtts(atts);
     const subTypes = handleSubtypeNS(subType);
     const { classList, tagName } = mapHtml({type, subType, htmlMap});
-    const innerHtml = () => {
+    const innerHtml = (content) => {
       const getters = {
         markHtml: () => ["chapter", "verses"].includes(subType) ? atts.number : "",
-        wrapperHtml: () => contentHtml(content, "content") + contentHtml(meta_content, "meta-content")
+        wrapperHtml: () => contentChildren(content) + contentHtml(meta_content, "meta-content")
       };
       const getContentHtml = getters[`${type}Html`];
       return typeof getContentHtml === "function" ? getContentHtml() : "";
@@ -47,7 +55,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
       tagName,
       classList,
       dataset: { type, ...subTypes, ...attsProps, ...props},
-      children: innerHtml()
+      children: innerHtml(content)
     });
   };
 
@@ -60,26 +68,22 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
       tagName,
       classList,
       dataset: { type, ...subTypes, ...attsProps, ...props },
-      children: `${contentHtml(content, "content")}`
+      children: contentChildren(content)
     });
   };
 
   const sequenceHtml = (perfSequence, sequenceId) => {
     const { blocks, ...props } = perfSequence;
     const { classList, tagName } = mapHtml({ type: props.type, subType: "sequence", htmlMap });
-
     return createElement({
       tagName,
       id: `${sequenceId}`,
       classList: classList,
       dataset: props,
-      children: createElement({
-        classList: ["content"],
-        children: blocks?.reduce(
-          (blocksHtml, block) => (blocksHtml += blockHtml(block)),
-          ""
-        )
-      })
+      children: blocks?.reduce(
+        (blocksHtml, block) => (blocksHtml += blockHtml(block)),
+        ""
+      )
     });
   };
   const perfSequence = perfDocument.sequences[sequenceId];

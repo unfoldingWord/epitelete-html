@@ -62,39 +62,34 @@ const getProps = (node) => {
   };
 };
 
-const getContentFrom = (contentNode) =>
-  Array.from(contentNode.childNodes, (node) => {
-    if (node.nodeType === TEXT_NODE) return node.textContent;
-    const props = getProps(node);
-    const contents = node.childNodes;
-    try {
-    } catch (error) {
-      console.error(error);
-      console.log(contents.length);
+const getContentFrom = (contentNode) => {
+  let content = [];
+  for (const node of contentNode.childNodes) {
+    if (node.nodeType === TEXT_NODE) {
+      content.push(node.textContent);
+      continue;
     }
-    const block = {
-      ...props,
-      ...(contents?.length &&
-        [...contents].reduce((contents, node) => {
-          if (node.nodeType === TEXT_NODE) return contents;
-          return { ...contents, ...blockFrom(node) };
-        }, {}))
-    };
-    return block;
-  });
+    if (node.getAttribute("class") === "meta-content") continue;
+    content.push(getBlock(node));
+  }
+  return content;
+}
 
 const blockFrom = (node) => {
-  const content = node.classList && [...node.classList.values()][0];
+  if (node.hasAttribute("data-atts-number")) return {};
+  const metaContent = node.querySelector(":scope > .meta-content");
   return {
-    [content]: getContentFrom(node) || []
+    content: getContentFrom(node) || [],
+    ...(metaContent && { meta_content: getContentFrom(metaContent) || [] })
   };
 };
 
 const getBlock = (node) => {
   const props = getProps(node);
+  const defaultContent = ["paragraph"].includes(props.type) && { content: [] };
   return {
     ...props,
-    ...(props.type === "paragraph" && blockFrom(node.firstChild))
+    ...(node.childNodes.length ? blockFrom(node) : defaultContent)
   };
 };
 
@@ -120,13 +115,11 @@ const parseHtml = (html) =>
 function html2perf(perfHtml, sequenceId) {
   const sequencesHtml = parseHtml(perfHtml.sequencesHtml[sequenceId]);
   const sequenceElement = sequencesHtml.getElementById(sequenceId);
-  const blocksContainer = sequenceElement.querySelector(".paragraph, .graft")
-    .parentNode;
   const props = getDataset(sequenceElement);
 
   return {
     ...props,
-    blocks: getBlocksFrom(blocksContainer)
+    blocks: getBlocksFrom(sequenceElement)
   };
 }
 
