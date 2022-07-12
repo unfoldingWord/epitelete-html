@@ -16,5 +16,16 @@
     "*": {
       "tagName": "span"
     }
+  },
+  "graft":{
+    "heading": {
+      "tagName": "div"
+    },
+    "title": {
+      "tagName": "div"
+    },
+    "introduction": {
+      "tagName": "div"
+    }
   }
 }
