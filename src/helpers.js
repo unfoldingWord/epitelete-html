@@ -35,14 +35,14 @@ export const createElement = (
 ) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset})}>${children}</${tagName || "div"}>`;
 
 export const mapHtml = ({ props, htmlMap }) => {
-  const { type, subType } = props;
-  const setDefaultClassList = (type, subType) => [...(type ? [type] : []), ...(subType ? [subType.replace(":", " ")] : [])];
+  const { type, subtype } = props;
+  const setDefaultClassList = (type, subtype) => [...(type ? [type] : []), ...(subtype ? [subtype.replace(":", " ")] : [])];
 
-  if (!htmlMap) return { classList: setDefaultClassList(type, subType) };
+  if (!htmlMap) return { classList: setDefaultClassList(type, subtype) };
 
   const maps = [
-    htmlMap[type]?.[subType],
-    htmlMap["*"]?.[subType],
+    htmlMap[type]?.[subtype],
+    htmlMap["*"]?.[subtype],
     htmlMap[type]?.["*"],
     htmlMap["*"]?.["*"]
   ];
@@ -59,7 +59,7 @@ export const mapHtml = ({ props, htmlMap }) => {
   }, { classList: [], tagName: ""});
 
   return {
-    classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subType),
+    classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subtype),
     tagName: result.tagName,
     id: result.id
   }
@@ -74,9 +74,9 @@ export const handleAtts = (atts) =>
       }, {})
     : {};
 
-export const handleSubtypeNS = (subType) => {
-  const subTypes = subType.split(":");
-  return subTypes.length > 1
-    ? { "sub_type-ns": subTypes[0], sub_type: subTypes[1] }
-    : { sub_type: subType };
+export const handleSubtypeNS = (subtype) => {
+  const subtypes = subtype.split(":");
+  return subtypes.length > 1
+    ? { "subtype-ns": subtypes[0], subtype: subtypes[1] }
+    : { subtype };
 };

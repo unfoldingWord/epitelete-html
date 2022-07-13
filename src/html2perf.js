@@ -39,12 +39,12 @@ const getDataset = (node) => {
 
 const getProps = (node) => {
   const {
-    "sub_type-ns": subTypeNs,
-    sub_type: subType,
+    "subtype-ns": subtypeNs,
+    subtype: rawSubtype,
     ...dataset
   } = getDataset(node);
-  const sub_type = {
-    sub_type: subTypeNs ? `${subTypeNs}:${subType}` : subType
+  const subtype = {
+    subtype: subtypeNs ? `${subtypeNs}:${rawSubtype}` : rawSubtype
   };
   const props =
     dataset &&
@@ -58,7 +58,7 @@ const getProps = (node) => {
     }, {});
   return {
     ...props,
-    ...sub_type
+    ...subtype
   };
 };
 
