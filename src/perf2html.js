@@ -13,7 +13,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
         ? element
         : contentElementHtml(element),
     ""
-  );
+  ) ?? "";
 
   const contentHtml = (content, className) =>
     content

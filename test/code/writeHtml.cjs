@@ -10,6 +10,7 @@ const testGroup = "writeHtml";
 const pk = new UWProskomma();
 // const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "fra_lsg_succinct.json")));
 const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
+const sidePerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "mrk_perf.json")));
 pk.loadSuccinctDocSet(succinctJson);
 
 test(
@@ -42,6 +43,31 @@ test(
         try {
             const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
+            const html = await instance.readHtml(bookCode);
+            t.ok(html);
+            try {
+                const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
+                const newHtmlSequence = newHtml.sequencesHtml[html.mainSequenceId];
+                const oldHtmlSequence = html.sequencesHtml[html.mainSequenceId];
+                t.equal(newHtmlSequence, oldHtmlSequence);
+                t.pass();
+            } catch (e) {
+                t.fail();
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+);
+
+test(
+    `writeHtml consistency with standalone (${testGroup})`,
+    async function (t) {
+        t.plan(3);
+        try {
+            const instance = new EpiteletePerfHtml({ docSetId: "DBL/eng_engWEBBE" });
+            const bookCode = "MRK"
+            instance.sideloadPerf(bookCode, sidePerf);
             const html = await instance.readHtml(bookCode);
             t.ok(html);
             try {
