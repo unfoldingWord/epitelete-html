@@ -1620,14 +1620,14 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-epitelete@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.1.tgz#076609dd6571da0e19ab9411f1bfd8344da5942d"
-  integrity sha512-lpRMYumUGsEnOiy7Dbtm2VQnAC4JORoLkOBXvZzn/2VETZwdHnTV56qUbFZnyEyUUMf/rzrLd2qG5vcq8fyFPg==
+epitelete@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.2.tgz#70a642fd581bcc31b25342ae956646f7ec70f75c"
+  integrity sha512-z4GC8Dy7kTUZK9eAVgY5nDp4NZP0V14WOwaU/oLrxBWdUmSzAG60bgNTplDSOHqfnAiZ362FdMcbzIqr6eNSow==
   dependencies:
     "@babel/core" "^7.17.10"
     lodash "4.17.21"
-    proskomma-json-tools "^0.4.0"
+    proskomma-json-tools "^0.4.1"
 
 es-abstract@^1.19.0, es-abstract@^1.19.5, es-abstract@^1.20.0:
   version "1.20.1"
@@ -2684,6 +2684,16 @@ proskomma-json-tools@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.4.0.tgz#02e91c77b088a738ac879a596c63c30f793e12ac"
   integrity sha512-8663IkQB1PQ6v58RDBIVoM9qDkNNnXngtv27njkm6KBKbcm0zWGAuUuZ61t9jmiHuvZmgYboQ9zvfLLWiv1A1g==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
+    ajv "^8.11.0"
+    deep-equal "^2.0.5"
+
+proskomma-json-tools@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.4.1.tgz#0f7f48521506e6d440e109a432425b3c875d4235"
+  integrity sha512-GTpQe5bGrZ86Pl46oaR4H5fMnISyRseEiJ9fFKLG+hNLs2b5YJfr+XbicuCoAnsE5jcGrt9pxK4ue0S2nVYmAw==
   dependencies:
     "@babel/core" "^7.17.10"
     "@babel/plugin-proposal-throw-expressions" "^7.18.6"
