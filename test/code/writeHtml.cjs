@@ -67,7 +67,7 @@ test(
         try {
             const instance = new EpiteletePerfHtml({ docSetId: "DBL/eng_engWEBBE" });
             const bookCode = "MRK"
-            instance.sideloadPerf(bookCode, sidePerf);
+            await instance.sideloadPerf(bookCode, sidePerf);
             const html = await instance.readHtml(bookCode);
             t.ok(html);
             try {
@@ -102,6 +102,35 @@ test(
             t.ok(/Pequeña cigüeña dócil. /.test(newHtmlSequence));
         } catch (err) {
             console.log(err);
+        }
+    },
+);
+
+const alignedPerf = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "TIT_dcs_eng-alignment_perf_v0.2.1.json")));
+
+test(
+    `writes and reads with pipeline options (${testGroup})`,
+    async function (t) {
+        t.plan(3);
+        try {
+            const instance = new EpiteletePerfHtml({ docSetId: "DBL/eng_engWEBBE" });
+            const bookCode = "MRK"
+            const readOptions = { readPipeline : "stripAlignment" }
+            const writeOptions = { writePipeline : "mergeAlignment" }
+            await instance.sideloadPerf(bookCode, alignedPerf);
+            const html = await instance.readHtml(bookCode, readOptions);
+            t.ok(html);
+            try {
+                const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html, {...writeOptions, ...readOptions});
+                const newHtmlSequence = newHtml.sequencesHtml[html.mainSequenceId];
+                const oldHtmlSequence = html.sequencesHtml[html.mainSequenceId];
+                t.equal(newHtmlSequence, oldHtmlSequence);
+                t.pass();
+            } catch (e) {
+                t.fail(e);
+            }
+        } catch (err) {
+            t.fail(err);
         }
     },
 );
