@@ -7,10 +7,10 @@ const args = process.argv.slice(3)
 const pk = new UWProskomma();
 
 console.log("Loading source to proskomma...");
-const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test", "test_data", "fra_lsg_succinct.json")));
-const docSetId = "eBible/fra_fraLSG";
-// const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test", "test_data", "eng_engWEBBE_succinct.json")));
-// const docSetId = "DBL/eng_engWEBBE";
+// const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test", "test_data", "fra_lsg_succinct.json")));
+// const docSetId = "eBible/fra_fraLSG";
+const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test", "test_data", "eng_engWEBBE_succinct.json")));
+const docSetId = "DBL/eng_engWEBBE";
 pk.loadSuccinctDocSet(succinctJson);
 
 export const generatePerf = async () => {
