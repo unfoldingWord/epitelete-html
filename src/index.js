@@ -9,9 +9,10 @@ class EpiteletePerfHtml extends Epitelete {
         this.htmlMap = htmlMap
     }
 
-    _outputHtml(doc) {
+
+    _outputHtml(doc,bcvFilter) {
         const sequencesHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
-            sequences[seqId] = perf2html(doc, seqId, this.htmlMap);
+            sequences[seqId] = perf2html(doc, seqId, this.htmlMap, bcvFilter);
             return sequences;
         }, {});
         return {
@@ -29,8 +30,10 @@ class EpiteletePerfHtml extends Epitelete {
      * @param {object} [options]
      * @param {string} options.readPipeline - the name of the read pipeline
      */
-    async readHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.readPerf(bookCode, options));
+
+    // const bcvFilterExample = { book: { tit: { ch: { 1: {} } } } }
+    async readHtml(bookCode, options = {}, bcvFilter = {}) {
+        return this._outputHtml(await this.readPerf(bookCode, options), bcvFilter);
     }
 
     /**
