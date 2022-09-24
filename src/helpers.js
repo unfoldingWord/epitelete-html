@@ -12,31 +12,37 @@ const getDatasetHtml = (data) =>
     ""
   );
 
-const setClassList = classList => classList && Array.isArray(classList)
-  ? ` class="${classList.join(" ")}" `
-  : ` class="${classList}" `;
+const setClassList = (classList) =>
+  classList && Array.isArray(classList)
+    ? ` class="${classList.join(" ")}" `
+    : ` class="${classList}" `;
 
-const setElementAttributes = ({
-  classList,
-  id,
-  props,
-  dataset
-}) => `${setClassList(classList)}${id && `id="${id}" `}${getAttributesHtml(props)}${getDatasetHtml(dataset)}`;
+const setElementAttributes = ({ classList, id, props, dataset }) =>
+  `${setClassList(classList)}${id && `id="${id}" `}${getAttributesHtml(
+    props
+  )}${getDatasetHtml(dataset)}`;
 
-export const createElement = (
-  {
-    tagName = "div",
-    classList = "",
-    id = "",
-    props = {},
-    dataset = {},
-    children = ""
-  }
-) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset})}>${children}</${tagName || "div"}>`;
+export const createElement = ({
+  tagName = "div",
+  classList = "",
+  id = "",
+  props = {},
+  dataset = {},
+  children = "",
+}) =>
+  `<${tagName || "div"}${setElementAttributes({
+    classList,
+    id,
+    props,
+    dataset,
+  })}>${children}</${tagName || "div"}>`;
 
 export const mapHtml = ({ props, htmlMap }) => {
   const { type, subtype } = props;
-  const setDefaultClassList = (type, subtype) => [...(type ? [type] : []), ...(subtype ? [subtype.replace(":", " ")] : [])];
+  const setDefaultClassList = (type, subtype) => [
+    ...(type ? [type] : []),
+    ...(subtype ? [subtype.replace(":", " ")] : []),
+  ];
 
   if (!htmlMap) return { classList: setDefaultClassList(type, subtype) };
 
@@ -44,26 +50,35 @@ export const mapHtml = ({ props, htmlMap }) => {
     htmlMap[type]?.[subtype],
     htmlMap["*"]?.[subtype],
     htmlMap[type]?.["*"],
-    htmlMap["*"]?.["*"]
+    htmlMap["*"]?.["*"],
   ];
 
-  const getClassList = (classList) => classList && (Array.isArray(classList) ? classList : [classList]); 
-  const result = maps.reduce((_result, map) => {
-    const _map = map || {};
-    const { classList, tagName, id } = (typeof _map === 'function') ? _map(props) : _map;
+  const getClassList = (classList) =>
+    classList && (Array.isArray(classList) ? classList : [classList]);
+  const result = maps.reduce(
+    (_result, map) => {
+      const _map = map || {};
+      const { classList, tagName, id } =
+        typeof _map === "function" ? _map(props) : _map;
 
-    _result.classList = _result.classList.concat(getClassList(classList) || []);
-    if (!_result.tagName && tagName) _result.tagName = tagName;
-    if (!_result.id && id) _result.id = id;
-    return _result;
-  }, { classList: [], tagName: ""});
+      _result.classList = _result.classList.concat(
+        getClassList(classList) || []
+      );
+      if (!_result.tagName && tagName) _result.tagName = tagName;
+      if (!_result.id && id) _result.id = id;
+      return _result;
+    },
+    { classList: [], tagName: "" }
+  );
 
   return {
-    classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subtype),
+    classList: result.classList.length
+      ? [...new Set(result.classList)]
+      : setDefaultClassList(type, subtype),
     tagName: result.tagName,
-    id: result.id
-  }
-}
+    id: result.id,
+  };
+};
 
 export const handleAtts = (atts) =>
   atts
