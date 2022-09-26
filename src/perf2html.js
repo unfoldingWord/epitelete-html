@@ -1,8 +1,9 @@
 import defaultHtmlMap from "./htmlmap.js";
 import { createElement, handleAtts, handleSubtypeNS, mapHtml } from "./helpers";
 
-const map =
-  typeof defaultHtmlMap === "function" ? defaultHtmlMap({}) : defaultHtmlMap;
+function getMap(htmlMap) {
+  return typeof htmlMap === "function" ? htmlMap({}) : htmlMap;
+}
 
 function perf2html({ perfDocument, sequenceId, htmlMap = map }) {
   const { sequences, ...parent } = perfDocument;
@@ -49,9 +50,10 @@ export const contentElementHtml = ({ element, parent = {}, htmlMap = map }) => {
   const attsProps = handleAtts(atts);
   const subtypes = handleSubtypeNS(subtype);
   const currentProps = { type, subtype, atts, ...props, parent };
+  const _htmlmap = getMap(htmlMap);
   const { classList, tagName, id } = mapHtml({
     props: currentProps,
-    htmlMap,
+    htmlMap: _htmlmap,
   });
   const innerHtml = (content) => {
     const getters = {
@@ -63,7 +65,7 @@ export const contentElementHtml = ({ element, parent = {}, htmlMap = map }) => {
           content: meta_content,
           className: "meta-content",
           parent: currentProps,
-          htmlMap,
+          htmlMap: _htmlmap,
         }),
     };
     const getContentHtml = getters[`${type}Html`];
@@ -84,16 +86,21 @@ export const blockHtml = ({ block, parent = {}, htmlMap = map }) => {
   const attsProps = handleAtts(atts);
   const subtypes = handleSubtypeNS(subtype);
   const currentProps = { type, subtype, atts, ...props, parent };
+  const _htmlmap = getMap(htmlMap);
   const { classList, tagName, id } = mapHtml({
     props: currentProps,
-    htmlMap,
+    htmlMap: _htmlmap,
   });
   return createElement({
     tagName,
     id,
     classList,
     dataset: { type, ...subtypes, ...attsProps, ...props },
-    children: contentChildren({ content, htmlMap, parent: currentProps }),
+    children: contentChildren({
+      content,
+      htmlMap: _htmlmap,
+      parent: currentProps,
+    }),
   });
 };
 
@@ -105,9 +112,10 @@ export const sequenceHtml = ({
 }) => {
   const { blocks, ...props } = perfSequence;
   const currentProps = { ...props, subtype: "sequence", parent };
+  const _htmlmap = getMap(htmlMap);
   const { classList, tagName } = mapHtml({
     props: currentProps,
-    htmlMap,
+    htmlMap: _htmlmap,
   });
   return createElement({
     tagName,
@@ -116,7 +124,11 @@ export const sequenceHtml = ({
     dataset: props,
     children: blocks?.reduce(
       (blocksHtml, block) =>
-        (blocksHtml += blockHtml({ block, htmlMap, parent: currentProps })),
+        (blocksHtml += blockHtml({
+          block,
+          htmlMap: _htmlmap,
+          parent: currentProps,
+        })),
       ""
     ),
   });
