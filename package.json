@@ -1,6 +1,6 @@
 {
   "name": "epitelete-perf-html",
-  "version": "0.2.6",
+  "version": "0.2.8",
   "description": "",
   "main": "dist/index.js",
   "directories": {
@@ -27,7 +27,7 @@
   "homepage": "https://github.com/unfoldingWord-box3/Epitelete-Perf-Html#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
-    "epitelete": "^0.2.8",
+    "epitelete": "^0.2.9",
     "node-html-parser": "^5.3.3"
   },
   "devDependencies": {
