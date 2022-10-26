@@ -1775,10 +1775,10 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-epitelete@^0.2.8:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.8.tgz#1527af028514fb8cb019b7584d73c13237b14d9a"
-  integrity sha512-R+Dzf2KOiQ2Guk7U2zqxJ5FCci8vC1pZkmbHB8xJcOCRlHY0EsaU2BEZJBJ18I7IvqvcZXeW0nmcP8dansAj+A==
+epitelete@^0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.9.tgz#18865a73a0a4733f1a523684ba1d88deb70382c2"
+  integrity sha512-KX+vuYGBa4m+WjzBbXDfMOR1GAqvHs7k6S+HF0y9e4zFMrTPG0eN40MRPl6p+k04or3Bcd2BzrXzTp+urdC2YA==
   dependencies:
     "@babel/core" "^7.19.0"
     lodash "4.17.21"
