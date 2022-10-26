@@ -2,7 +2,7 @@ import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
 
-class EpiteletePerfHtml extends Epitelete {
+class EpiteleteHtml extends Epitelete {
 
     constructor({proskomma=null, docSetId, htmlMap, options={}}) {
         super({ proskomma, docSetId, options });
@@ -71,4 +71,4 @@ class EpiteletePerfHtml extends Epitelete {
 
 }
 
-export default EpiteletePerfHtml;
+export default EpiteleteHtml;
