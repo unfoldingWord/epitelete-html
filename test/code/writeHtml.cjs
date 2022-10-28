@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const { fail } = require("assert");
-const EpiteletePerfHtml = require("../../src/index").default;
+const EpiteleteHtml = require("../../src/index").default;
 
 const testGroup = "writeHtml";
 
@@ -18,7 +18,7 @@ test(
     async function (t) {
         try {
             t.plan(2);
-            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
+            const instance = new EpiteleteHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "3JN"
             const html = await instance.readHtml(bookCode);
             t.ok(html);
@@ -41,7 +41,7 @@ test(
     async function (t) {
         t.plan(3);
         try {
-            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
+            const instance = new EpiteleteHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             const html = await instance.readHtml(bookCode);
             t.ok(html);
@@ -65,7 +65,7 @@ test(
     async function (t) {
         t.plan(3);
         try {
-            const instance = new EpiteletePerfHtml({ docSetId: "DBL/eng_engWEBBE" });
+            const instance = new EpiteleteHtml({ docSetId: "DBL/eng_engWEBBE" });
             const bookCode = "MRK"
             await instance.sideloadPerf(bookCode, sidePerf);
             const html = await instance.readHtml(bookCode);
@@ -90,7 +90,7 @@ test(
     async function (t) {
         t.plan(2);
         try {
-            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
+            const instance = new EpiteleteHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             const html = await instance.readHtml(bookCode);
             t.ok(html);
@@ -113,7 +113,7 @@ test(
     async function (t) {
         t.plan(3);
         try {
-            const instance = new EpiteletePerfHtml({ docSetId: "DBL/eng_engWEBBE" });
+            const instance = new EpiteleteHtml({ docSetId: "DBL/eng_engWEBBE" });
             const bookCode = "MRK"
             const readOptions = { readPipeline : "stripAlignment" }
             const writeOptions = { writePipeline : "mergeAlignment" }

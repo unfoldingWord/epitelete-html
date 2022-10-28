@@ -1,17 +1,17 @@
-# Epitelete-Perf-Html
+# epitelete-html
 Epitelete sub-class for HTML handling.
 
 ## Installation
 ```shell
-npm install epitelete-perf-html
+npm install epitelete-html
 ```
 
 ## Usage
 ```js
-import EpiteletePerfHtml from 'epitelete-perf-html';
+import EpiteleteHtml from 'epitelete-html';
 // Instantiate Proskomma and load some content into it
-const epiPerfHtml= new EpiteletePerfHtml({proskomma: proskommaInstance, docSetId: "doc_set_id"});
-const epiPerfHtml= new EpiteletePerfHtml({proskomma: proskommaInstance, docSetId: "doc_set_id", options: {historySize: 10}});
+const epiPerfHtml= new EpiteleteHtml({proskomma: proskommaInstance, docSetId: "doc_set_id"});
+const epiPerfHtml= new EpiteleteHtml({proskomma: proskommaInstance, docSetId: "doc_set_id", options: {historySize: 10}});
 ```
 
 ### Html handling

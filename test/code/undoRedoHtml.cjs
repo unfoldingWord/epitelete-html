@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const EpiteletePerfHtml = require("../../src/index").default;
+const EpiteleteHtml = require("../../src/index").default;
 
 const testGroup = "undo/redoHtml";
 
@@ -16,7 +16,7 @@ test(
     async function (t) {
         try {
             t.plan(5);
-            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
+            const instance = new EpiteleteHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             const bookCode = "LUK"
             // Read
             const htmlWeRead = await instance.readHtml(bookCode);

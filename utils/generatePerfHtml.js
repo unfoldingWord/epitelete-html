@@ -1,7 +1,7 @@
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const EpiteletePerfHtml = require("../src/index").default;
+const EpiteleteHtml = require("../src/index").default;
 const beautify = require('js-beautify').html;
 
 const args = process?.argv?.slice(3)
@@ -13,7 +13,7 @@ const docSetId = "eBible/fra_fraLSG";
 pk.loadSuccinctDocSet(succinctJson);
 
 export const generatePerfHtml = async () => {
-  const instance = new EpiteletePerfHtml({proskomma: pk, docSetId});
+  const instance = new EpiteleteHtml({proskomma: pk, docSetId});
   const bookCode = (args[0] || "psa").toUpperCase();
   if (! args[0]) 
     console.log("\u001B[33m", `No book code provided, generating perfHtml for ${bookCode} instead...`, "\u001B[0m")

@@ -3,7 +3,7 @@ const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
 const {fail} = require("assert");
-const EpiteletePerfHtml = require("../../src/index").default;
+const EpiteleteHtml = require("../../src/index").default;
 
 const testGroup = "htmlMap";
 
@@ -15,7 +15,7 @@ test(`Maps correctly with htmlMap (${testGroup})`, async function (t) {
   t.plan(3);
   try {
     const newClass = "test-seq-123"
-    const instance = new EpiteletePerfHtml({
+    const instance = new EpiteleteHtml({
       proskomma: pk,
       docSetId: "DBL/eng_engWEBBE",
       htmlMap: {

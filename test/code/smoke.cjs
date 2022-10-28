@@ -2,7 +2,7 @@ const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
 const {UWProskomma} = require("uw-proskomma");
-const EpiteletePerfHtml = require("../../src/index").default;
+const EpiteleteHtml = require("../../src/index").default;
 
 const testGroup = "Smoke";
 
@@ -16,8 +16,8 @@ test(
     async function (t) {
         try {
             t.plan(4)
-            t.throws(() => new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/fra_fraLSG"}), "docSetId is not present");
-            const instance = new EpiteletePerfHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
+            t.throws(() => new EpiteleteHtml({proskomma: pk, docSetId: "DBL/fra_fraLSG"}), "docSetId is not present");
+            const instance = new EpiteleteHtml({proskomma: pk, docSetId: "DBL/eng_engWEBBE"});
             t.ok(instance);
             t.ok(instance.proskomma);
             t.ok(instance.docSetId);
