@@ -1,6 +1,6 @@
 {
   "name": "epitelete-html",
-  "version": "0.2.13-alpha",
+  "version": "0.2.14-alpha3",
   "description": "",
   "main": "dist/index.js",
   "directories": {
@@ -13,7 +13,8 @@
     "build": "babel src -d dist",
     "prepublishOnly": "rm -fr dist && npm run build",
     "generatePerf": "babel-tape-runner utils/generatePerf.js",
-    "generatePerfHtml": "babel-tape-runner utils/generatePerfHtml.js"
+    "generatePerfHtml": "babel-tape-runner utils/generatePerfHtml.js",
+    "generateBcvPatch": "babel-tape-runner utils/generateBcvPatch.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,7 @@
   "homepage": "https://github.com/unfoldingWord/epitelete-html#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
-    "epitelete": "^0.2.13",
+    "epitelete": "^0.2.14",
     "node-html-parser": "^5.3.3"
   },
   "devDependencies": {

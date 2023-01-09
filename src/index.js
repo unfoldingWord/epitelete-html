@@ -1,5 +1,6 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
+import html2bcvPatch from "./html2bcvPatch"
 import html2perf from "./html2perf"
 
 class EpiteleteHtml extends Epitelete {
@@ -9,11 +10,16 @@ class EpiteleteHtml extends Epitelete {
         this.htmlMap = htmlMap
     }
 
-    // _mergeWithOrgPerf(newPerf, bcvFilter) {
-    //     console.log(bcvFilter)        
-    //     return newPerf
-    // }
-
+    _mergeWithOrgPerf(prevPerf, perfHtml, sequenceId, bcvFilter) {
+        console.log(bcvFilter)
+        const newPerf = html2perf(perfHtml, sequenceId)
+        console.log(prevPerf)
+        console.log(sequenceId)
+        console.log(newPerf)
+        const jsonPatch = html2bcvPatch(perfHtml, sequenceId)
+        console.log(jsonPatch)
+        return newPerf
+    }
 
     _outputHtml(doc,bcvFilter) {
         const sequencesHtml = Object.keys(doc.sequences).reduce((sequences, seqId) => {
@@ -71,9 +77,9 @@ class EpiteleteHtml extends Epitelete {
      */
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}, bcvFilter = {}) {
         const { writePipeline, readPipeline } = options;
-        // const perf = this._mergeWithOrgPerf(html2perf(perfHtml, sequenceId), bcvFilter);
-        const perf = html2perf(perfHtml, sequenceId);
-        await this.writePerf(bookCode,sequenceId,perf, {writePipeline});
+        const prevPerf = await this.readPerf(bookCode, {readPipeline})
+        const perf = this._mergeWithOrgPerf(prevPerf, perfHtml, sequenceId, bcvFilter);
+        await this.writePerf(bookCode,sequenceId, perf, {writePipeline});
         return await this.readHtml(bookCode, {readPipeline});
     }
 

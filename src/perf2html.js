@@ -7,8 +7,9 @@ import {
 } from "./helpers";
 
 function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap, bcvFilter) {
+  const bookId = perfDocument?.metadata?.document?.bookCode
   const bcvContext = {
-    bookId: perfDocument?.metadata?.document?.bookCode,
+    bookId,
     ignoreAll: false,
   }
 
@@ -80,10 +81,10 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap, bcvFilter
     } = element;
     const _bookId = bcvContext.bookId
     const bookId = _bookId.charAt(0).toUpperCase() + _bookId.slice(1).toLowerCase()
-    const attsProps = 
-      (subtype === "verses") 
-        ? { "bcv-id": `${bookId}.${bcvContext.chNum}.${atts.number}` } 
-        : handleAtts(atts) 
+    let attsProps = handleAtts(atts) 
+    if (subtype === "verses") {
+      attsProps["bcv-id"] = `${bookId}.${bcvContext.chNum}.${atts.number}` 
+    } 
     const subtypes = handleSubtypeNS(subtype);
     const { classList, tagName, id } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
     const innerHtml = (content) => {
