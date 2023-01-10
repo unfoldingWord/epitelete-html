@@ -15,15 +15,14 @@
   }
 
   gets converted to a bcv verify structure, suitable as a help for a simple verification 
-  to check if any verse is included in this specification.
-  The above example would result in the following structure:
+  to check if any verse is included in this specification (see function isVerifiedWithBcvStruct).
+  The above example results in the following structure:
   {
     bookIds: Set(1) { 'Act' }, // all chapters and verses in the Acts of Apostles are valid
-    chIds: Set(1) { 'Tit.2' }, // all verses in the Letter to Titus are valid
+    chIds: Set(1) { 'Tit.2' }, // all verses in chapter 2 in the Letter to Titus are valid
     vIds: Set(2) { 'Tit.1.1', 'Tit.1.2' } // verses 1 and 2 in chapter 1 of the Letter to Titus are valid
   }
 */
-
 export const getBcvVerifyStruct = (bcvFilter) => {
   const retObj = {
     bookIds: new Set(),
@@ -53,10 +52,25 @@ export const getBcvVerifyStruct = (bcvFilter) => {
   return retObj    
 }
 
-
-// export const verifyWithBcvStruct = (bcvIdStr, bcvVerifyStruct) => {
-
-// }
+/*
+  Simple verification to check if any verse is included in the verify bcv structure
+  (See function getBcvVerifyStruct for converting a hierarchical bcv tree structure 
+    to a verify structure, such as is used here)
+*/
+export const isVerifiedWithBcvStruct = (bcvIdStr, bcvVerifyStruct) => {
+  const bcvIdParts = bcvIdStr?.split(".")
+  let isVerified = false
+  if (bcvIdParts?.length > 0) {
+    isVerified = bcvVerifyStruct?.bookIds.has(bcvIdParts[0])
+    if ((!isVerified) && (bcvIdParts.length > 1)){
+      isVerified = bcvVerifyStruct?.chIds.has(`${bcvIdParts[0]}.${bcvIdParts[1]}`)
+      if ((!isVerified) && (bcvIdParts.length > 2)){
+        isVerified = bcvVerifyStruct?.vIds.has(`${bcvIdParts[0]}.${bcvIdParts[1]}.${bcvIdParts[2]}`)
+      }  
+    }
+  }
+  return isVerified
+}
 
 
 const getAttributesHtml = (props) =>

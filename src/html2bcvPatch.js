@@ -1,5 +1,5 @@
 import { parse } from "node-html-parser";
-import { getBcvVerifyStruct } from "./helpers";
+import { getBcvVerifyStruct, isVerifiedWithBcvStruct } from "./helpers";
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -71,53 +71,56 @@ const getProps = (node) => {
   return retObj
 };
 
-const getContentFrom = (contentNode,curBcvId) => {
+const getContentFrom = (contentNode,ws)=> {
   let content = [];
   for (const node of contentNode.childNodes) {
     if (node.nodeType === TEXT_NODE) {
-      content.push({ "op": "replace", "bcvId": curBcvId, "value": node.textContent });
+      if (isVerifiedWithBcvStruct(ws.curBcvId,ws.bcvVerifyStruct)) {
+        if (!ws.patchObj[ws.curBcvId]) ws.patchObj[ws.curBcvId] = ""
+        ws.patchObj[ws.curBcvId] += node.textContent
+      }
       continue;
     }
     if (node.getAttribute("class") === "meta-content") continue;
-    const curBlock = getBlock(node);
+    const curBlock = getBlock(node,ws);
     if (curBlock?.bcvIdStr) {
-      curBcvId = curBlock?.bcvIdStr
+      ws.curBcvId = curBlock?.bcvIdStr
     }
   }
   return content;
 }
 
-const blockFrom = (node,curBcvId) => {
+const blockFrom = (node,ws)=> {
   if (node.hasAttribute("data-atts-number")) return {};
   const metaContent = node.querySelector(":scope > .meta-content");
   return {
-    content: getContentFrom(node,curBcvId) || [],
-    ...(metaContent && { meta_content: getContentFrom(metaContent,curBcvId) || [] })
+    content: getContentFrom(node,ws)|| [],
+    ...(metaContent && { meta_content: getContentFrom(metaContent,ws)|| [] })
   };
 };
 
-const getBlock = (node,curBcvId) => {
+const getBlock = (node,ws) => {
   const props = getProps(node);
   const defaultContent = ["paragraph"].includes(props.type) && { content: [] };
   return {
     bcvIdStr: props?.bcvIdStr,
-    ...(node.childNodes.length ? blockFrom(node,curBcvId) : defaultContent)
+    ...(node.childNodes.length ? blockFrom(node,ws): defaultContent)
   };
 };
 
-const browserGetBlocks = (nodes,curBcvId) => Array.from(nodes, (node) => getBlock(node,curBcvId));
+const browserGetBlocks = (nodes,ws) => Array.from(nodes, (node) => getBlock(node,ws));
 
-const nodeJsGetBlocks = (nodes,curBcvId) =>
+const nodeJsGetBlocks = (nodes,ws) =>
   nodes.reduce((blocksList, node) => {
     if (node.nodeType !== ELEMENT_NODE) return blocksList;
-    blocksList.push(getBlock(node,curBcvId));
+    blocksList.push(getBlock(node,ws));
     return blocksList;
   }, []);
 
-const getBlocksFrom = (containerNode,curBcvId) =>
+const getBlocksFrom = (containerNode,ws) =>
   typeof containerNode.children === "object"
-    ? browserGetBlocks(containerNode.children,curBcvId)
-    : nodeJsGetBlocks(containerNode.childNodes,curBcvId);
+    ? browserGetBlocks(containerNode.children,ws)
+    : nodeJsGetBlocks(containerNode.childNodes,ws);
 
 const parseHtml = (html) =>
   typeof DOMParser === "function"
@@ -127,26 +130,14 @@ const parseHtml = (html) =>
 function html2bcvPatch(perfHtml, sequenceId, bcvFilter) {
   const sequencesHtml = parseHtml(perfHtml.sequencesHtml[sequenceId]);
   const sequenceElement = sequencesHtml.getElementById(sequenceId);
-  let curBcvId = ""
-  const blocks = getBlocksFrom(sequenceElement,curBcvId)
-
-  // transform bcvFilter and instead use a set for verification at each level: book, chapter and verse
-  const _verseObjectsArray = []
-
-  const bcvVerifyObj = getBcvVerifyStruct(bcvFilter)
-  console.log(bcvVerifyObj)
-
-  const fullPatchList = []
-  if (blocks){
-    blocks.forEach(block => {
-      if (block.content?.length>0) {
-        fullPatchList.push(...block.content)
-      }
-    });
+  const workspace = {
+    curBcvId: "",
+    // transform bcvFilter and instead use a set for verification at each level: book, chapter and verse
+    bcvVerifyStruct: getBcvVerifyStruct(bcvFilter),
+    patchObj: {}
   }
-  const checkList = fullPatchList.filter(item => item.bcvId === "Tit.1.1")
-
-  return checkList
+  const blocks = getBlocksFrom(sequenceElement,workspace)
+  return workspace.patchObj
 }
 
 export default html2bcvPatch;

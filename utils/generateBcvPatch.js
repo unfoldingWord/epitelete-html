@@ -29,21 +29,21 @@ export const generateBcvPatch = async () => {
     ext: sequenceId ? "html" : "json"
   };
 
-  const bcvBookId = 'tit'
+  const bcvBookId = bookCode.toLowerCase()
   const chapter = 1
   const bcvQuery = { 
     book: { 
       [bcvBookId]: {
-        ch: { [chapter] : {}, 2: { v: { 1: {}, 2: {} } } } 
+        ch: { [chapter] : { /* v: { 1: {}, 2: {} } */ } } 
       },
-      act: {}
     } 
   }
 
   const jsonPatch = html2bcvPatch(perfHtml, sequenceId, bcvQuery)
   console.log(jsonPatch)
   
-  console.log("\u001B[32m", `✔ Patch file generated for ${bookCode}`, "\u001B[0m");
+  // console.log("\u001B[32m", `✔ Patch file for ${bookCode} chapter ${chapter} verses 1 and 2`, "\u001B[0m");
+  console.log("\u001B[32m", `✔ Patch file for ${bookCode} chapter ${chapter}`, "\u001B[0m");
 };
 
 if (process?.argv?.length) generateBcvPatch();
