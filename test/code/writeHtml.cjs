@@ -115,8 +115,8 @@ test(
         try {
             const instance = new EpiteleteHtml({ docSetId: "DBL/eng_engWEBBE" });
             const bookCode = "MRK"
-            const readOptions = { readPipeline : "stripAlignment" }
-            const writeOptions = { writePipeline : "mergeAlignment" }
+            const readOptions = { readPipeline : "stripAlignmentPipeline" }
+            const writeOptions = { writePipeline : "mergeAlignmentPipeline" }
             await instance.sideloadPerf(bookCode, alignedPerf);
             const html = await instance.readHtml(bookCode, readOptions);
             t.ok(html);
