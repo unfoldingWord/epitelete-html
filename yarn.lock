@@ -1775,10 +1775,10 @@ entities@^2.0.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-2.2.0.tgz#098dc90ebb83d8dffa089d55256b351d34c4da55"
   integrity sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==
 
-epitelete@^0.2.16:
-  version "0.2.16"
-  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.16.tgz#657915395cb66e5ae82c0e9dfb605ae328b9326b"
-  integrity sha512-VT3qTdOkERmPA1SDRmGBGpkfSdWPK1IOWLONxuZfC88XbJ9rzcWGHTUR8tx3pG2Nq1T9PCt5LlJ/6nF1ZqIdyg==
+epitelete@^0.2.18:
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.18.tgz#76d0d08e79c7c33f19177254b85fc31c4ddffa29"
+  integrity sha512-xoJ5+X4M9zlq26D64pT1P7LGlritbdPPlS1SyC9AUacwocrhRmX25VeKLnDkW6GUG/+IJSsx/uik51cq5TB/MA==
   dependencies:
     "@babel/core" "^7.19.0"
     proskomma-json-tools "^0.6.6"
