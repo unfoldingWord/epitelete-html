@@ -20,9 +20,9 @@ const setElementAttributes = ({
   classList,
   id,
   props,
-  dataset
-}) => `${setClassList(classList)}${id && `id="${id}" `}${getAttributesHtml(props)}${getDatasetHtml(dataset)}`;
-
+  dataset,
+  contentEditable
+}) => `${setClassList(classList)}${id && `id="${id}" `}${getAttributesHtml(props)}${getDatasetHtml(dataset)}${contentEditable ? `contenteditable=${contentEditable} `:"" }`;
 export const createElement = (
   {
     tagName = "div",
@@ -30,9 +30,10 @@ export const createElement = (
     id = "",
     props = {},
     dataset = {},
-    children = ""
+    children = "",
+    contentEditable = ""
   }
-) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset})}>${children}</${tagName || "div"}>`;
+) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset,contentEditable})}>${children}</${tagName || "div"}>`;
 
 export const mapHtml = ({ props, htmlMap }) => {
   const { type, subtype } = props;
@@ -50,18 +51,18 @@ export const mapHtml = ({ props, htmlMap }) => {
   const getClassList = (classList) => classList && (Array.isArray(classList) ? classList : [classList]); 
   const result = maps.reduce((_result, map) => {
     const _map = map || {};
-    const { classList, tagName, id } = (typeof _map === 'function') ? _map(props) : _map;
-
+    const { classList, tagName, id,contentEditable } = (typeof _map === 'function') ? _map(props) : _map;
     _result.classList = _result.classList.concat(getClassList(classList) || []);
     if (!_result.tagName && tagName) _result.tagName = tagName;
     if (!_result.id && id) _result.id = id;
+    if (!_result.contentEditable && contentEditable) _result.contentEditable = contentEditable;
     return _result;
-  }, { classList: [], tagName: ""});
-
+  }, { classList: [], tagName: "", contentEditable:""});
   return {
     classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subtype),
     tagName: result.tagName,
-    id: result.id
+    id: result.id,
+    contentEditable :result.contentEditable
   }
 }
 
