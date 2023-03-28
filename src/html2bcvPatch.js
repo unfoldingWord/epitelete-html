@@ -60,12 +60,10 @@ const getProps = (node) => {
   const type = props?.type
   let retObj = {}
   if (type === "mark") {
-    if (!props["bcv-id"]) {
-      retObj = { ...props, ...subtype }
-    } else {
+    if (props["bcv-id"]) {
       retObj = { bcvIdStr: props["bcv-id"] }
     }
-  } else if (type === "paragraph") {
+  } else {
     retObj = { ...props, ...subtype }
   }
   return retObj
@@ -75,9 +73,9 @@ const getContentFrom = (contentNode,ws)=> {
   let content = [];
   for (const node of contentNode.childNodes) {
     if (node.nodeType === TEXT_NODE) {
-      if (isVerifiedWithBcvStruct(ws.curBcvId,ws.bcvVerifyStruct)) {
-        if (!ws.patchObj[ws.curBcvId]) ws.patchObj[ws.curBcvId] = ""
-        ws.patchObj[ws.curBcvId] += node.textContent
+      if (isVerifiedWithBcvStruct(ws?.curBcvId,ws.bcvVerifyStruct)) {
+        if (!ws.patchObj[ws.curBcvId]) ws.patchObj[ws.curBcvId] = { replace: [] }
+        ws.patchObj[ws.curBcvId].replace.push(node.textContent)
       }
       continue;
     }
@@ -85,6 +83,9 @@ const getContentFrom = (contentNode,ws)=> {
     const curBlock = getBlock(node,ws);
     if (curBlock?.bcvIdStr) {
       ws.curBcvId = curBlock?.bcvIdStr
+    } else if ((curBlock?.type) && (isVerifiedWithBcvStruct(ws?.curBcvId,ws.bcvVerifyStruct))) {
+      if (!ws.patchObj[ws.curBcvId]) ws.patchObj[ws.curBcvId] = { replace: [] }
+      ws.patchObj[ws.curBcvId].replace.push(curBlock)
     }
   }
   return content;
@@ -103,8 +104,8 @@ const getBlock = (node,ws) => {
   const props = getProps(node);
   const defaultContent = ["paragraph"].includes(props.type) && { content: [] };
   return {
-    bcvIdStr: props?.bcvIdStr,
-    ...(node.childNodes.length ? blockFrom(node,ws): defaultContent)
+    ...props,
+    ...(node.childNodes.length ? blockFrom(node,ws) : defaultContent)
   };
 };
 

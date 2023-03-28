@@ -21,7 +21,7 @@ export const generatePerfHtml = async () => {
     console.log(`Generating perfHtml file...`);
   
   const perfHtml = await instance.readHtml(bookCode);
-  const sequenceId = args[1] === "main" ? perfHtml.mainSequenceId : args[1];
+  const sequenceId = (args[1] === "main" || !args[1]) ? perfHtml.mainSequenceId : args[1];
 
   const output = {
     content: sequenceId ? beautify(perfHtml.sequencesHtml[sequenceId]) : JSON.stringify(perfHtml, undefined, 2),
