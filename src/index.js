@@ -30,7 +30,7 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async readHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.readPerf(bookCode, options));
+        return this._outputHtml(await this.readPerf(bookCode, {...options, cloning: false}));
     }
 
     /**
@@ -40,7 +40,7 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async undoHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.undoPerf(bookCode, options));
+        return this._outputHtml(await this.undoPerf(bookCode, {...options, cloning: false}));
     }
 
     /**
@@ -50,7 +50,7 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async redoHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.redoPerf(bookCode, options));
+        return this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}));
     }
 
     /**
@@ -65,7 +65,7 @@ class EpiteleteHtml extends Epitelete {
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}) {
         const { writePipeline, readPipeline } = options;
         const perf = html2perf(perfHtml, sequenceId);
-        await this.writePerf(bookCode,sequenceId,perf, {writePipeline});
+        await this.writePerf(bookCode,sequenceId,perf, {writePipeline, cloning: false});
         return await this.readHtml(bookCode, {readPipeline});
     }
 

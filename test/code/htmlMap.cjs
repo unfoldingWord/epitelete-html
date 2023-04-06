@@ -29,10 +29,13 @@ test(`Maps correctly with htmlMap (${testGroup})`, async function (t) {
         },
         main: {
           "*": {
-            tagName: "custom2",
+            tagName: "custom2"
           },
         },
         paragraph: {
+          "*": {
+            attributes: {contenteditable: true}
+          },
           "usfm:p": {
             tagName: "custom3"
           }
