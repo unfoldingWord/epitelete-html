@@ -1,7 +1,7 @@
 const getAttributesHtml = (props) =>
   Object.keys(props).reduce(
     (html, propKey) =>
-      props[propKey] ? (html += `${propKey}="${props[propKey]}" `) : html,
+      props[propKey] ? (html += ` ${propKey}="${props[propKey]}"`) : html,
     ""
   );
 
@@ -13,27 +13,26 @@ const getDatasetHtml = (data) =>
   );
 
 const setClassList = classList => classList && Array.isArray(classList)
-  ? ` class="${classList.join(" ")}" `
-  : ` class="${classList}" `;
+  ? ` class="${classList.join(" ")}"`
+  : ` class="${classList}"`;
 
 const setElementAttributes = ({
   classList,
   id,
-  props,
-  dataset,
-  contentEditable
-}) => `${setClassList(classList)}${id && `id="${id}" `}${getAttributesHtml(props)}${getDatasetHtml(dataset)}${contentEditable ? `contenteditable=${contentEditable} `:"" }`;
+  attributes,
+  dataset
+}) => `${setClassList(classList)}${id && ` id="${id}"`}${getDatasetHtml(dataset)}${getAttributesHtml(attributes)}`;
 export const createElement = (
   {
     tagName = "div",
-    classList = "",
     id = "",
-    props = {},
+    classList = "",
     dataset = {},
     children = "",
+    attributes = {},
     contentEditable = ""
   }
-) => `<${tagName || "div"}${setElementAttributes({classList,id,props,dataset,contentEditable})}>${children}</${tagName || "div"}>`;
+) => `<${tagName || "div"}${setElementAttributes({classList,id,attributes,dataset,contentEditable})}>${children}</${tagName || "div"}>`;
 
 export const mapHtml = ({ props, htmlMap }) => {
   const { type, subtype } = props;
@@ -51,18 +50,18 @@ export const mapHtml = ({ props, htmlMap }) => {
   const getClassList = (classList) => classList && (Array.isArray(classList) ? classList : [classList]); 
   const result = maps.reduce((_result, map) => {
     const _map = map || {};
-    const { classList, tagName, id,contentEditable } = (typeof _map === 'function') ? _map(props) : _map;
+    const { classList, tagName, id, attributes } = (typeof _map === 'function') ? _map(props) : _map;
     _result.classList = _result.classList.concat(getClassList(classList) || []);
+    _result.attributes = {..._result.attributes, ...attributes};
     if (!_result.tagName && tagName) _result.tagName = tagName;
     if (!_result.id && id) _result.id = id;
-    if (!_result.contentEditable && contentEditable) _result.contentEditable = contentEditable;
     return _result;
-  }, { classList: [], tagName: "", contentEditable:""});
+  }, { classList: [], tagName: "", attributes:{}});
   return {
     classList: result.classList.length ? [...new Set(result.classList)] : setDefaultClassList(type, subtype),
     tagName: result.tagName,
     id: result.id,
-    contentEditable :result.contentEditable
+    attributes :result.attributes
   }
 }
 
