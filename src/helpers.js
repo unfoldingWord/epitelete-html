@@ -30,9 +30,8 @@ export const createElement = (
     dataset = {},
     children = "",
     attributes = {},
-    contentEditable = ""
   }
-) => `<${tagName || "div"}${setElementAttributes({classList,id,attributes,dataset,contentEditable})}>${children}</${tagName || "div"}>`;
+) => `<${tagName || "div"}${setElementAttributes({classList,id,attributes,dataset})}>${children}</${tagName || "div"}>`;
 
 export const mapHtml = ({ props, htmlMap }) => {
   const { type, subtype } = props;
