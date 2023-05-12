@@ -139,7 +139,7 @@ test(
 
 const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "new_grafts.json")));
 
-test.only(
+test(
     `creates new sequences for new grafts (${testGroup})`,
     async t => {
         t.plan(2)

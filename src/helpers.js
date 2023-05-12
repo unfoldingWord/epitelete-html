@@ -1,7 +1,7 @@
 const getAttributesHtml = (props) =>
   Object.keys(props).reduce(
     (html, propKey) =>
-      props[propKey] ? (html += ` ${propKey}="${props[propKey]}"`) : html,
+      props[propKey] !== undefined && props[propKey] !== null ? (html += ` ${propKey}="${props[propKey]}"`) : html,
     ""
   );
 
