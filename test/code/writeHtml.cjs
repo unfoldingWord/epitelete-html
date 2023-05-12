@@ -158,9 +158,12 @@ test(
         const html = await epitelete.readHtml(bookCode).catch((err) => {
             console.log(err)
         });
+        // console.log(JSON.stringify(html.sequencesHtml, null, 4));
+
         const merged = await epitelete.writeHtml(bookCode, html.mainSequenceId, html, writeOptions);
         // const perf = await epitelete.readPerf(bookCode);
-        // console.log(JSON.stringify(perf, null, 4));
+        // console.log(JSON.stringify(merged.sequencesHtml, null, 4));
+
         t.equals(Object.keys(merged.sequencesHtml).length, 3);
     }
 )

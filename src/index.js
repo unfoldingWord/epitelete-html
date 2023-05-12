@@ -64,7 +64,6 @@ class EpiteleteHtml extends Epitelete {
      */
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}) {
         const { writePipeline, readPipeline, insertSequences } = options;
-        // console.log(sequenceId, perfHtml);
         const perf = html2perf(perfHtml, sequenceId);
         await this.writePerf(bookCode,sequenceId,perf, {writePipeline, insertSequences, cloning: false});
         return await this.readHtml(bookCode, {readPipeline});
