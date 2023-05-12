@@ -1,3 +1,5 @@
+import { extractSequence } from "../../utils";
+
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
@@ -134,3 +136,34 @@ test(
         }
     },
 );
+
+const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "new_grafts.json")));
+
+test(
+    `creates new sequences for new grafts (${testGroup})`,
+    async t => {
+        t.plan(2)
+        //vague test, requires further testing to improve confidence. Good enough for now.
+        const docSetId = "DCS/en_ult";
+        const epitelete = new EpiteleteHtml({ docSetId });
+        const bookCode = "TIT";
+        const writeOptions = { insertSequences: true };
+        
+        const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
+            console.log(err)
+        });
+        // console.log(JSON.stringify(unaligned, null, 4));
+        t.equals(Object.keys(unaligned.sequences).length, 1);
+
+        const html = await epitelete.readHtml(bookCode).catch((err) => {
+            console.log(err)
+        });
+        // console.log(JSON.stringify(html.sequencesHtml, null, 4));
+
+        const merged = await epitelete.writeHtml(bookCode, html.mainSequenceId, html, writeOptions);
+        // const perf = await epitelete.readPerf(bookCode);
+        // console.log(JSON.stringify(merged.sequencesHtml, null, 4));
+
+        t.equals(Object.keys(merged.sequencesHtml).length, 3);
+    }
+)

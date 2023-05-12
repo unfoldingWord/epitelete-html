@@ -41,7 +41,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     } = element;
     const attsProps = handleAtts(atts);
     const subtypes = handleSubtypeNS(subtype);
-    const { classList, tagName, id } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
+    const { classList, tagName, id, attributes } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
     const innerHtml = (content) => {
       const getters = {
         markHtml: () => ["chapter", "verses"].includes(subtype) ? atts.number : "",
@@ -55,6 +55,7 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
       tagName,
       id,
       classList,
+      attributes,
       dataset: { type, ...subtypes, ...attsProps, ...props},
       children: innerHtml(content)
     });
@@ -64,11 +65,12 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
     const { type, subtype, atts, content, ...props } = block;
     const attsProps = handleAtts(atts);
     const subtypes = handleSubtypeNS(subtype);
-    const { classList, tagName, id } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
+    const { classList, tagName, id, attributes } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
     return createElement({
       tagName,
       id,
       classList,
+      attributes,
       dataset: { type, ...subtypes, ...attsProps, ...props },
       children: contentChildren(content)
     });
@@ -76,12 +78,13 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {
 
   const sequenceHtml = (perfSequence, sequenceId) => {
     const { blocks, ...props } = perfSequence;
-    const { classList, tagName } = mapHtml({ props: {...props, subtype: "sequence"}, htmlMap });
+    const { classList, tagName, attributes } = mapHtml({ props: {...props, subtype: "sequence"}, htmlMap });
     return createElement({
       tagName,
       id: `${sequenceId}`,
       classList: classList,
       dataset: props,
+      attributes,
       children: blocks?.reduce(
         (blocksHtml, block) => (blocksHtml += blockHtml(block)),
         ""

@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.2.1",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.2.1"
+      }
+    ]
+  },
+  "metadata": {},
+  "sequences": {
+    "YWQwNGZlYmEt": {
+      "type": "main",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
+            "nothing here..."
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "YWQwNGZlYmEt"
+}

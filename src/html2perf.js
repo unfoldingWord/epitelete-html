@@ -23,18 +23,35 @@ const kebabDataSet = (target) =>
     return dataset;
   }, {});
 
+const evaluateKey = (key) => {
+  if (key === "true") return true;
+  if (key === "false") return false;
+  return key;
+}
+
+const evaluateProps = function (props) {
+  const newProps = Object.keys(props).reduce((newKeys,key) => {
+    newKeys[key] = evaluateKey(props[key]);
+    return newKeys;
+  }, {})
+  return newProps;
+}
+
 const getDataset = (node) => {
-  const dataSet = node.dataset;
-  if (dataSet) return kebabDataSet(dataSet);
-  const atts = getAttributes(node);
-  return (
-    atts &&
-    Object.keys(atts).reduce((dataset, key) => {
-      const data = key.match(/(?<=data-).+/);
-      if (data) dataset[data] = atts[key];
-      return dataset;
-    }, {})
-  );
+  const _getDataset = (node) => {
+    const dataSet = node.dataset;
+    if (dataSet) return kebabDataSet(dataSet);
+    const atts = getAttributes(node);
+    return (
+      atts &&
+      Object.keys(atts).reduce((dataset, key) => {
+        const data = key.match(/(?<=data-).+/);
+        if (data) dataset[data] = atts[key];
+        return dataset;
+      }, {})
+    );
+  }
+  return evaluateProps(_getDataset(node));
 };
 
 const getProps = (node) => {
