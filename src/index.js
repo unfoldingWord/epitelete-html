@@ -63,9 +63,10 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}) {
-        const { writePipeline, readPipeline } = options;
+        const { writePipeline, readPipeline, insertSequences } = options;
+        // console.log(sequenceId, perfHtml);
         const perf = html2perf(perfHtml, sequenceId);
-        await this.writePerf(bookCode,sequenceId,perf, {writePipeline, cloning: false});
+        await this.writePerf(bookCode,sequenceId,perf, {writePipeline, insertSequences, cloning: false});
         return await this.readHtml(bookCode, {readPipeline});
     }
 
