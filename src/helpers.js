@@ -1,3 +1,6 @@
+import UUID from 'pure-uuid';
+import base64 from 'base-64';
+
 const getAttributesHtml = (props) =>
   Object.keys(props).reduce(
     (html, propKey) =>
@@ -79,3 +82,21 @@ export const handleSubtypeNS = (subtype) => {
     ? { "subtype-ns": subtypes[0], subtype: subtypes[1] }
     : { subtype };
 };
+
+export const generateId = () => base64.encode(new UUID(4)).substring(0, 12);
+
+export const handleNewGrafts = (newGrafts) => {
+  const newSequences = {};
+  newGrafts.forEach(graft => {
+    const sequenceId = generateId();
+    newSequences[sequenceId] = {
+      type: graft.subtype,
+      blocks: graft.content || []
+    };
+    
+    graft.target = sequenceId;
+    delete graft.content;
+    delete graft.new;
+  });
+  return newSequences;
+}

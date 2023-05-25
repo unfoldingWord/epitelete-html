@@ -1,6 +1,7 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
+import { handleNewGrafts } from "./helpers";
 
 class EpiteleteHtml extends Epitelete {
 
@@ -64,8 +65,31 @@ class EpiteleteHtml extends Epitelete {
      */
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}) {
         const { writePipeline, readPipeline, insertSequences } = options;
-        const perf = html2perf(perfHtml, sequenceId);
-        await this.writePerf(bookCode,sequenceId,perf, {writePipeline, insertSequences, cloning: false});
+        const { perfSequence, newSequences } = html2perf(perfHtml, sequenceId);
+
+        const history = this.history[bookCode];
+
+        const newSequencesArray = Object.entries(newSequences);
+        const hasNewSequences = !!newSequencesArray.length;
+        if (hasNewSequences) {
+            newSequencesArray.forEach(([sequenceId, perfSequence]) => {
+                const validatorResult = this.validator.validate('constraint', 'perfSequence', '0.3.0', perfSequence);
+                if (!validatorResult.isValid) {
+                    throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
+                }
+            });
+            const doc = { ...this.getDocument(bookCode, false) };
+            doc.sequences = { ...doc.sequences, ...newSequences };
+            history.stack.unshift({ perfDocument: doc });
+        }
+        try {
+            await this.writePerf(bookCode, sequenceId, perfSequence, { writePipeline, cloning: false });
+        } catch (e) {
+            if (hasNewSequences) history.stack.shift();
+            throw new Error(e.message);
+        }
+        if (hasNewSequences) history.stack.splice(1,1);
+
         return await this.readHtml(bookCode, {readPipeline});
     }
 
