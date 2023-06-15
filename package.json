@@ -1,6 +1,6 @@
 {
   "name": "epitelete-html",
-  "version": "0.2.20-beta.6",
+  "version": "0.2.20-beta.7",
   "description": "",
   "main": "dist/index.js",
   "directories": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "@babel/core": "^7.17.10",
     "base-64": "^1.0.0",
-    "epitelete": "^0.2.20-beta.4",
+    "epitelete": "^0.2.20-beta.5",
     "node-html-parser": "^5.3.3",
     "pure-uuid": "^1.6.3"
   },
