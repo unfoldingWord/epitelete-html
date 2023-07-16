@@ -1124,17 +1124,12 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@findr/perf@^1.0.3-beta.13":
-  version "1.0.3-beta.13"
-  resolved "https://registry.yarnpkg.com/@findr/perf/-/perf-1.0.3-beta.13.tgz#c986271326de03837d66f4a842d6a1b0c1da63b7"
-  integrity sha512-wYdTfJTdsUFKzdO0iy/naDwzlA8zKoZwgY7CMmd2XZ1+5MD9d4hbN4h/CXp2J7YmbyrUW3P2Y3w0iC+1OtSDGw==
+"@findr/perf@^1.0.3-beta.17":
+  version "1.0.3-beta.17"
+  resolved "https://registry.yarnpkg.com/@findr/perf/-/perf-1.0.3-beta.17.tgz#e0837afd6cf81028c782c0708a534f0fef5df7b1"
+  integrity sha512-qOAG+MsGQfnvq6AEhnAYhpDCUt0bkmenQQn36Ty2WhN83wAIwGN1n0tyhzrnXZO6CcgKgtgMzbodchPLLijkhg==
   dependencies:
-    proskomma-json-tools "0.7.1"
-
-"@findr/text@^1.0.7-beta.4":
-  version "1.0.7-beta.4"
-  resolved "https://registry.yarnpkg.com/@findr/text/-/text-1.0.7-beta.4.tgz#d3f2f3e34fba15334637d20fdc2f94f86be1c260"
-  integrity sha512-bkZuNkYXelaJdtiWfo+6npN6+TpuQcjTAUFdpp1QJe+37eTQK4iytWka6UT+WnPNWUqHyvVHhMWnRV94pjPlvg==
+    proskomma-json-tools "^0.7.1"
 
 "@graphql-tools/merge@8.3.0":
   version "8.3.0"
@@ -1858,14 +1853,13 @@ entities@^4.2.0, entities@^4.4.0:
   resolved "https://registry.yarnpkg.com/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
 
-epitelete@^0.2.20-beta.2:
-  version "0.2.20-beta.2"
-  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.20-beta.2.tgz#b0b7ea5a50b7bbe81806e3bc84f8fb8f7d728b16"
-  integrity sha512-H7YyzuWDO1FiMS9RwbvBHk1vWPZQRqjOea5lc2BXR5DGgIhToAkm++/At0/C80Tz3PCEFAFuUnbs4O6IRln5Yw==
+epitelete@^0.2.20:
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/epitelete/-/epitelete-0.2.20.tgz#1a89703d5e3152461179bd87540a6f58905141cc"
+  integrity sha512-dag7scneBXNrR4LLSmeFWxb1ShYeWOxxRqyogJo9UEES2Nr8B5cNDfGqMqYOszCAMdmnGH1RoH1qydAk04JjoA==
   dependencies:
     "@babel/core" "^7.19.0"
-    "@findr/perf" "^1.0.3-beta.13"
-    "@findr/text" "^1.0.7-beta.4"
+    "@findr/perf" "^1.0.3-beta.17"
     base-64 "^1.0.0"
     proskomma-json-tools "^0.7.1"
     pure-uuid "^1.6.3"
@@ -2952,17 +2946,6 @@ prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
-proskomma-json-tools@0.7.1, proskomma-json-tools@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.7.1.tgz#1ad2690f8438a5b79bd5ed6593bf221cb4b7599a"
-  integrity sha512-8a8eKJwbOgvabCe+Kv97zKnp1WAnwo6zU0jc3dPNILFUZojxzeXjH7xu/Jk6tbwC8TBPK57ldJSoQ6S9eTvD3w==
-  dependencies:
-    "@babel/core" "^7.17.10"
-    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
-    ajv "^8.11.0"
-    cheerio "^1.0.0-rc.12"
-    deep-equal "^2.0.5"
-
 proskomma-json-tools@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.4.0.tgz#02e91c77b088a738ac879a596c63c30f793e12ac"
@@ -2971,6 +2954,17 @@ proskomma-json-tools@^0.4.0:
     "@babel/core" "^7.17.10"
     "@babel/plugin-proposal-throw-expressions" "^7.18.6"
     ajv "^8.11.0"
+    deep-equal "^2.0.5"
+
+proskomma-json-tools@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.7.1.tgz#1ad2690f8438a5b79bd5ed6593bf221cb4b7599a"
+  integrity sha512-8a8eKJwbOgvabCe+Kv97zKnp1WAnwo6zU0jc3dPNILFUZojxzeXjH7xu/Jk6tbwC8TBPK57ldJSoQ6S9eTvD3w==
+  dependencies:
+    "@babel/core" "^7.17.10"
+    "@babel/plugin-proposal-throw-expressions" "^7.18.6"
+    ajv "^8.11.0"
+    cheerio "^1.0.0-rc.12"
     deep-equal "^2.0.5"
 
 proskomma-utils@^0.7.0:

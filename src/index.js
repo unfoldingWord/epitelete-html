@@ -3,11 +3,34 @@ import perf2html from "./perf2html"
 import html2perf from "./html2perf"
 import { handleNewGrafts } from "./helpers";
 
+const ACTIONS = {
+    WRITE_HTML: 'writeHtml',
+    READ_HTML: 'readHtml',
+    LOAD_HTML: 'loadHtml',
+    UNDO_HTML: 'undoHtml',
+    REDO_HTML: 'redoHtml',
+}
 class EpiteleteHtml extends Epitelete {
 
     constructor({proskomma=null, docSetId, htmlMap, options={}}) {
         super({ proskomma, docSetId, options });
+        this._htmlObservers = [];
         this.htmlMap = htmlMap
+    }
+
+    unobserveHtml(observer) {
+        this._observers = this._observers.filter(o => o !== observer);
+    }
+
+    observeHtml(observer) {
+        this._observers.push(observer);
+        return () => this.unobserve(observer);
+    }
+
+    notifyHtmlObservers(...args) {
+        this._observers.forEach(observer => {
+            observer(...args);
+        });
     }
 
     _outputHtml(doc) {
@@ -31,7 +54,8 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async readHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.readPerf(bookCode, {...options, cloning: false}));
+        const perfHtml = this._outputHtml(await this.readPerf(bookCode, {...options, cloning: false}));
+        return perfHtml
     }
 
     /**
@@ -41,7 +65,9 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async undoHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.undoPerf(bookCode, {...options, cloning: false}));
+        const perfHtml = this._outputHtml(await this.undoPerf(bookCode, {...options, cloning: false}));
+        this.notifyHtmlObservers({ action: ACTIONS.UNDO_HTML, data: perfHtml });
+        return perfHtml
     }
 
     /**
@@ -51,7 +77,9 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async redoHtml(bookCode, options = {}) {
-        return this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}));
+        const perfHtml = this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}));
+        this.notifyHtmlObservers({ action: ACTIONS.REDO_HTML, data: perfHtml });
+        return perfHtml
     }
 
     /**
@@ -88,9 +116,10 @@ class EpiteleteHtml extends Epitelete {
             if (hasNewSequences) history.stack.shift();
             throw new Error(e.message);
         }
-        if (hasNewSequences) history.stack.splice(1,1);
-
-        return await this.readHtml(bookCode, {readPipeline});
+        if (hasNewSequences) history.stack.splice(1, 1);
+        const writtenPerfHtml = await this.readHtml(bookCode, {readPipeline});
+        this.notifyHtmlObservers({ action: ACTIONS.WRITE_HTML, data: writtenPerfHtml });
+        return writtenPerfHtml;
     }
 
 }

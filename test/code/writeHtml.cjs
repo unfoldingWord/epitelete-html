@@ -97,7 +97,7 @@ test(
             const html = await instance.readHtml(bookCode);
             t.ok(html);
             //Change html sequence:
-            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/1<\/span>/, '1</span>Pequeña cigüeña dócil. ');
+            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/<\/span>/, '</span>Pequeña cigüeña dócil. ');
             html.sequencesHtml[html.mainSequenceId] = editedHtmlSequence;
             const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
             const newHtmlSequence = newHtml.sequencesHtml[newHtml.mainSequenceId];
