@@ -19,16 +19,16 @@ class EpiteleteHtml extends Epitelete {
     }
 
     unobserveHtml(observer) {
-        this._observers = this._observers.filter(o => o !== observer);
+        this._htmlobservers = this._htmlobservers.filter(o => o !== observer);
     }
 
     observeHtml(observer) {
-        this._observers.push(observer);
+        this._htmlobservers.push(observer);
         return () => this.unobserve(observer);
     }
 
     notifyHtmlObservers(...args) {
-        this._observers.forEach(observer => {
+        this._htmlobservers.forEach(observer => {
             observer(...args);
         });
     }
