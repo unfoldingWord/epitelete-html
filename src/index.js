@@ -91,8 +91,8 @@ class EpiteleteHtml extends Epitelete {
      * @param {object} [options]
      * @param {string} options.readPipeline - the name of the read pipeline
      */
-    async redoHtml(bookCode, options = {}) {
-        const perfHtml = this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}));
+    async redoHtml(bookCode, options = {}, bcvFilter = {}) {
+        const perfHtml = this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}), bcvFilter);
         this.notifyHtmlObservers({ action: ACTIONS.REDO_HTML, data: perfHtml });
         return perfHtml
     }
