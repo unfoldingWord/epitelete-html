@@ -1,3 +1,5 @@
+import { extractSequence } from "../../utils";
+
 const test = require("tape");
 const path = require("path");
 const fse = require("fs-extra");
@@ -95,7 +97,7 @@ test(
             const html = await instance.readHtml(bookCode);
             t.ok(html);
             //Change html sequence:
-            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/1<\/span>/, '1</span>Pequeña cigüeña dócil. ');
+            const editedHtmlSequence = html.sequencesHtml[html.mainSequenceId].replace(/<\/span>/, '</span>Pequeña cigüeña dócil. ');
             html.sequencesHtml[html.mainSequenceId] = editedHtmlSequence;
             const newHtml = await instance.writeHtml(bookCode, html.mainSequenceId, html);
             const newHtmlSequence = newHtml.sequencesHtml[newHtml.mainSequenceId];
@@ -134,3 +136,91 @@ test(
         }
     },
 );
+
+const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "new_grafts.json")));
+
+test(
+    `creates new sequences for new grafts (${testGroup})`,
+    async t => {
+        t.plan(2)
+        //vague test, requires further testing to improve confidence. Good enough for now.
+        const docSetId = "DCS/en_ult";
+        const epitelete = new EpiteleteHtml({ docSetId });
+        const bookCode = "TIT";
+        const writeOptions = { insertSequences: true };
+        
+        const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
+            console.log(err)
+        });
+        // console.log(JSON.stringify(unaligned, null, 4));
+        t.equals(Object.keys(unaligned.sequences).length, 1);
+
+        const html = await epitelete.readHtml(bookCode).catch((err) => {
+            console.log(err)
+        });
+        const nestedGrafts = `<span data-type="graft" data-subtype="footnote" data-new="true"><p class="paragraph usfm f" data-type="paragraph" data-subtype-ns="usfm" data-subtype="f"><span class="graft note_caller" data-type="graft" data-subtype="note_caller" data-new="true" data-preview_text="+"><p class="paragraph usfm f" data-type="paragraph" data-subtype-ns="usfm" data-subtype="f">+</p></span><span class="wrapper usfm span" data-type="wrapper" data-subtype-ns="usfm" data-subtype="ft">a custom note</span></p></span>`
+        const mainSequence = html.sequencesHtml[html.mainSequenceId];
+        const editedSequence = mainSequence.replace(/<span class="graft footnote".+?span>/g, nestedGrafts);
+
+        html.sequencesHtml[html.mainSequenceId] = editedSequence;
+        // console.log(JSON.stringify(html.sequencesHtml, null, 4));
+
+        const merged = await epitelete.writeHtml(bookCode, html.mainSequenceId, html, writeOptions);
+        // const perf = await epitelete.readPerf(bookCode);
+        // console.log(JSON.stringify(merged.sequencesHtml, null, 4));
+
+        t.equals(Object.keys(merged.sequencesHtml).length, 4);
+    }
+)
+
+const originalUsfm = fse
+  .readFileSync(
+    path.resolve(
+      path.join(__dirname, "..", "test_data", "RUT_ULT.usfm")
+    )
+  )
+  .toString();
+
+const getEpi = (usfm) => {
+  const proskomma = new UWProskomma([
+      {
+          name: "org",
+          type: "string",
+          regex: "^[^\\s]+$"
+      },
+      {
+          name: "lang",
+          type: "string",
+          regex: "^[^\\s]+$"
+      },
+      {
+          name: "abbr",
+          type: "string",
+          regex: "^[A-za-z0-9_-]+$"
+      }
+  ]);
+  proskomma.importDocument(
+    { org: "uw", lang: "en", abbr: "ult" },
+    "usfm",
+    usfm
+  );
+  const epitelete = new EpiteleteHtml({ proskomma, docSetId: "uw/en_ult" });
+  return epitelete;
+};
+
+test(
+    `reads new sequence from proskomma (${testGroup})`,
+    async t => {
+       t.plan(1)
+        const docSetId = "uw/en_ult";
+        const epitelete = getEpi(originalUsfm);
+        const bookCode = "RUT";
+        
+        const unaligned = await epitelete.readHtml(bookCode, {readPipeline: "stripAlignmentPipeline"}).catch((err) => {
+            console.log(err)
+        });
+        t.ok(unaligned);
+        // console.log(JSON.stringify(unaligned, null, 4));
+        t.end()
+    }
+)

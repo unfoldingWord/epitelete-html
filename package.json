@@ -1,6 +1,6 @@
 {
   "name": "epitelete-html",
-  "version": "0.2.19-alpha",
+  "version": "0.2.20-beta.8",
   "description": "",
   "main": "dist/index.js",
   "directories": {
@@ -28,8 +28,10 @@
   "homepage": "https://github.com/unfoldingWord/epitelete-html#readme",
   "dependencies": {
     "@babel/core": "^7.17.10",
-    "epitelete": "^0.2.18",
-    "node-html-parser": "^5.3.3"
+    "base-64": "^1.0.0",
+    "epitelete": "^0.2.20",
+    "node-html-parser": "^5.3.3",
+    "pure-uuid": "^1.6.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.10",

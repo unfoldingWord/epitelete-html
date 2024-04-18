@@ -1,12 +1,51 @@
 import Epitelete from "epitelete";
 import perf2html from "./perf2html"
 import html2perf from "./html2perf"
+import { handleNewGrafts } from "./helpers";
 
+const ACTIONS = {
+    WRITE_HTML: 'writeHtml',
+    READ_HTML: 'readHtml',
+    LOAD_HTML: 'loadHtml',
+    UNDO_HTML: 'undoHtml',
+    REDO_HTML: 'redoHtml',
+}
 class EpiteleteHtml extends Epitelete {
 
     constructor({proskomma=null, docSetId, htmlMap, options={}}) {
         super({ proskomma, docSetId, options });
+        this._htmlObservers = [];
         this.htmlMap = htmlMap
+    }
+
+    unobserveHtml(observer) {
+        this._htmlobservers = this._htmlobservers.filter(o => o !== observer);
+    }
+ 
+    observeHtml(observer) {
+        this._htmlobservers.push(observer);
+        return () => this.unobserve(observer);
+    }
+
+    notifyHtmlObservers(...args) {
+        this._htmlobservers.forEach(observer => {
+            observer(...args);
+        });
+    }
+
+    unobserveHtml(observer) {
+        this._htmlobservers = this._htmlobservers.filter(o => o !== observer);
+    }
+
+    observeHtml(observer) {
+        this._htmlobservers.push(observer);
+        return () => this.unobserve(observer);
+    }
+
+    notifyHtmlObservers(...args) {
+        this._htmlobservers.forEach(observer => {
+            observer(...args);
+        });
     }
 
     _outputHtml(doc,bcvFilter) {
@@ -29,9 +68,9 @@ class EpiteleteHtml extends Epitelete {
      * @param {object} [options]
      * @param {string} options.readPipeline - the name of the read pipeline
      */
-
     async readHtml(bookCode, options = {}, bcvFilter = {}) {
-        return this._outputHtml(await this.readPerf(bookCode, options), bcvFilter);
+        const perfHtml = this._outputHtml(await this.readPerf(bookCode, options), bcvFilter);
+        return perfHtml
     }
 
     /**
@@ -41,7 +80,9 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async undoHtml(bookCode, options = {}, bcvFilter = {}) {
-        return this._outputHtml(await this.undoPerf(bookCode, options), bcvFilter);
+        const perfHtml = this._outputHtml(await this.undoPerf(bookCode, {...options, cloning: false}), bcvFilter);
+        this.notifyHtmlObservers({ action: ACTIONS.UNDO_HTML, data: perfHtml });
+        return perfHtml
     }
 
     /**
@@ -50,8 +91,10 @@ class EpiteleteHtml extends Epitelete {
      * @param {object} [options]
      * @param {string} options.readPipeline - the name of the read pipeline
      */
-    async redoHtml(bookCode, options = {}, bcvFilter = {}) {
-        return this._outputHtml(await this.redoPerf(bookCode, options), bcvFilter);
+    async redoHtml(bookCode, options = {}) {
+        const perfHtml = this._outputHtml(await this.redoPerf(bookCode, {...options, cloning: false}));
+        this.notifyHtmlObservers({ action: ACTIONS.REDO_HTML, data: perfHtml });
+        return perfHtml
     }
 
     /**
@@ -64,10 +107,34 @@ class EpiteleteHtml extends Epitelete {
      * @param {string} options.readPipeline - the name of the read pipeline
      */
     async writeHtml(bookCode, sequenceId, perfHtml, options = {}, bcvFilter = {}) {
-        const { writePipeline, readPipeline } = options;
-        const perf = html2perf(perfHtml, sequenceId);
-        await this.writePerf(bookCode, sequenceId, perf, {writePipeline});
-        return await this.readHtml(bookCode, {readPipeline});
+        const { writePipeline, readPipeline, insertSequences } = options;
+        const { perfSequence, newSequences } = html2perf(perfHtml, sequenceId);
+
+        const history = this.history[bookCode];
+
+        const newSequencesArray = Object.entries(newSequences);
+        const hasNewSequences = !!newSequencesArray.length;
+        if (hasNewSequences) {
+            newSequencesArray.forEach(([sequenceId, perfSequence]) => {
+                const validatorResult = this.validator.validate('constraint', 'perfSequence', '0.3.0', perfSequence);
+                if (!validatorResult.isValid) {
+                    throw `PERF sequence  ${sequenceId} for ${bookCode} is not valid: ${JSON.stringify(validatorResult)}`;
+                }
+            });
+            const doc = { ...this.getDocument(bookCode, false) };
+            doc.sequences = { ...doc.sequences, ...newSequences };
+            history.stack.unshift({ perfDocument: doc });
+        }
+        try {
+            await this.writePerf(bookCode, sequenceId, perfSequence, { writePipeline, cloning: false });
+        } catch (e) {
+            if (hasNewSequences) history.stack.shift();
+            throw new Error(e.message);
+        }
+        if (hasNewSequences) history.stack.splice(1, 1);
+        const writtenPerfHtml = await this.readHtml(bookCode, {readPipeline});
+        this.notifyHtmlObservers({ action: ACTIONS.WRITE_HTML, data: writtenPerfHtml });
+        return writtenPerfHtml;
     }
 }
 

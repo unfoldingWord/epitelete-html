@@ -46,31 +46,31 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap, bcvFilter
     return bcvContext.ignoreAll ? "" : resStr
   }
 
-  const contentChildren = (content) => content?.reduce(
-    (contentHtml, element) => {
-      return contentHtml += (typeof element === "string")
-        ? bcvContext.ignoreAll ? "" : element
-        : contentElementHtml(element)
+  const contentChildren = (content, htmlMap = defaultHtmlMap) => content?.reduce(
+    (contentHtml, element) =>
+      contentHtml += (typeof element === "string")
+      ? bcvContext.ignoreAll ? "" : element
+      : contentElementHtml(element, htmlMap),
     },
     ""
   ) ?? "";
 
-  const contentHtml = (content, className) =>
-    content
-      ? conditionalCreateElement({
-          tagName: "span",
-          classList: [className],
-          children: content?.reduce(
-            (contentsHtml, element) =>
-              typeof element === "string"
-                ? bcvContext.ignoreAll ? "" : (contentsHtml += element)
-                : (contentsHtml += contentElementHtml(element)),
-            ""
-          )
-        })
-      : "";
+const contentHtml = (content, className, htmlMap = defaultHtmlMap) =>
+  content
+    ? conditionalCreateElement({
+        tagName: "span",
+        classList: [className],
+        children: content?.reduce(
+          (contentsHtml, element) =>
+            typeof element === "string"
+              ? bcvContext.ignoreAll ? "" : (contentsHtml += element)
+              : (contentsHtml += contentElementHtml(element, htmlMap)),
+          ""
+        )
+      })
+    : "";
 
-  const contentElementHtml = (element) => {
+  const contentElementHtml = (element, htmlMap = defaultHtmlMap) => {
     const {
       type,
       subtype,
@@ -86,11 +86,11 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap, bcvFilter
       attsProps["bcv-id"] = `${bookId}.${bcvContext.chNum}.${atts.number}` 
     } 
     const subtypes = handleSubtypeNS(subtype);
-    const { classList, tagName, id } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
+    const { classList, tagName, id, attributes } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
     const innerHtml = (content) => {
       const getters = {
         markHtml: () => ["chapter", "verses"].includes(subtype) ? atts.number : "",
-        wrapperHtml: () => contentChildren(content) + contentHtml(meta_content, "meta-content")
+        wrapperHtml: () => contentChildren(content, htmlMap) + contentHtml(meta_content, "meta-content")
       };
       const getContentHtml = getters[`${type}Html`];
       if (type === "mark") {
@@ -107,45 +107,51 @@ function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap, bcvFilter
       return bcvContext.ignoreAll ? "" : retStr
     };
 
-    return conditionalCreateElement({
-      tagName,
-      id,
-      classList,
-      dataset: { type, ...subtypes, ...attsProps, ...props},
-      children: innerHtml(content)
-    });
-  };
+  return conditionalCreateElement({
+    tagName,
+    id,
+    classList,
+    attributes,
+    dataset: { type, ...subtypes, ...attsProps, ...props},
+    children: innerHtml(content)
+  });
+};
 
-  const blockHtml = (block) => {
-    const { type, subtype, atts, content, ...props } = block;
-    const attsProps = handleAtts(atts);
-    const subtypes = handleSubtypeNS(subtype);
-    const { classList, tagName, id } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
-    return conditionalCreateElement({
-      tagName,
-      id,
-      classList,
-      dataset: { type, ...subtypes, ...attsProps, ...props },
-      children: contentChildren(content)
-    });
-  };
+const blockHtml = (block, htmlMap = defaultHtmlMap) => {
+  const { type, subtype, atts, content, ...props } = block;
+  const attsProps = handleAtts(atts);
+  const subtypes = handleSubtypeNS(subtype);
+  const { classList, tagName, id, attributes } = mapHtml({ props:{ type, subtype, atts, ...props }, htmlMap });
+  return conditionalCreateElement({
+    tagName,
+    id,
+    classList,
+    attributes,
+    dataset: { type, ...subtypes, ...attsProps, ...props },
+    children: contentChildren(content, htmlMap)
+  });
+};
 
-  const sequenceHtml = (perfSequence, sequenceId) => {
-    const { blocks, ...props } = perfSequence;
-    const { classList, tagName } = mapHtml({ props: {...props, subtype: "sequence"}, htmlMap });
-    return createElement({
-      tagName,
-      id: `${sequenceId}`,
-      classList: classList,
-      dataset: props,
-      children: blocks?.reduce(
-        (blocksHtml, block) => (blocksHtml += blockHtml(block)),
-        ""
-      )
-    });
-  };
+
+const sequenceHtml = (perfSequence, sequenceId, htmlMap = defaultHtmlMap) => {
+  const { blocks, ...props } = perfSequence;
+  const { classList, tagName, attributes } = mapHtml({ props: {...props, subtype: "sequence"}, htmlMap });
+  return createElement({
+    tagName,
+    id: `${sequenceId}`,
+    classList: classList,
+    dataset: props,
+    attributes,
+    children: blocks?.reduce(
+      (blocksHtml, block) => (blocksHtml += blockHtml(block, htmlMap)),
+      ""
+    )
+  });
+};
+
+function perf2html(perfDocument, sequenceId, htmlMap = defaultHtmlMap) {  
   const perfSequence = perfDocument.sequences[sequenceId];
-  return sequenceHtml(perfSequence, sequenceId);
+  return sequenceHtml(perfSequence, sequenceId, htmlMap);
 }
 
 export default perf2html;

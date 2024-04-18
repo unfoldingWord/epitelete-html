@@ -1,0 +1,37 @@
+{
+  "schema": {
+    "structure": "flat",
+    "structure_version": "0.2.1",
+    "constraints": [
+      {
+        "name": "perf",
+        "version": "0.2.1"
+      }
+    ]
+  },
+  "metadata": {},
+  "sequences": {
+    "YWQwNGZlYmEt": {
+      "type": "main",
+      "blocks": [
+        {
+          "type": "graft",
+          "subtype": "introduction",
+          "new": true
+        },
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
+            {
+              "type": "graft",
+              "subtype": "footnote",
+              "new": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "main_sequence_id": "YWQwNGZlYmEt"
+}

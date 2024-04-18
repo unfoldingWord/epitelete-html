@@ -6,46 +6,55 @@ const {fail} = require("assert");
 const EpiteleteHtml = require("../../src/index").default;
 
 const testGroup = "htmlMap";
+const perfWithNewGrafts = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "htmlMap_attributes.json")));
 
-const pk = new UWProskomma();
-const succinctJson = fse.readJsonSync(path.resolve(path.join(__dirname, "..", "test_data", "eng_engWEBBE_succinct.json")));
-pk.loadSuccinctDocSet(succinctJson);
-
-test(`Maps correctly with htmlMap (${testGroup})`, async function (t) {
-  t.plan(3);
-  try {
-    const newClass = "test-seq-123"
-    const instance = new EpiteleteHtml({
-      proskomma: pk,
-      docSetId: "DBL/eng_engWEBBE",
-      htmlMap: {
-        "*": {
-          sequence: {
-            classList: newClass
-          },
-          verses: {
-            tagName:"custom1"
-          }
-        },
-        main: {
+test(
+    `adds html attributes (${testGroup})`,
+    async t => {
+      //vague test, requires further testing to improve confidence. Good enough for now.
+      const docSetId = "DCS/en_ult";
+      const newClass = "test-seq-123"
+      const epitelete = new EpiteleteHtml({
+        docSetId,
+        htmlMap: {
           "*": {
-            tagName: "custom2",
+            sequence: {
+              classList: newClass
+            }
           },
-        },
-        paragraph: {
-          "usfm:p": {
-            tagName: "custom3"
+          main: {
+            "*": {
+              tagName: "custom2"
+            },
+          },
+          paragraph: {
+            "*": {
+              attributes: {contenteditable: false}
+            },
+            "usfm:p": {
+              tagName: "custom3"
+            }
           }
         }
-      }
-    });
-    const bookCode = "LUK"
-    const html = await instance.readHtml(bookCode);
-    t.ok(html.sequencesHtml[html.mainSequenceId].includes(newClass));
-    t.notOk(html.sequencesHtml[html.mainSequenceId].includes("sequence"));
+      });
+      const bookCode = "TIT";
+      const unaligned = await epitelete.sideloadPerf(bookCode, perfWithNewGrafts).catch((err) => {
+          console.log(err)
+      });
+      const html = await epitelete.readHtml(bookCode).catch((err) => {
+          console.log(err)
+      });
+      // console.log({ html: html.sequencesHtml[html.mainSequenceId] });
 
-    t.ok(["<custom1", "<custom2", "<custom3"].every((value) => html.sequencesHtml[html.mainSequenceId].includes(value)));
-  } catch (err) {
-    console.log(err);
-  }
-},);
+      t.notOk(html.sequencesHtml[html.mainSequenceId].includes("sequence"));
+
+      t.ok([
+        "<custom2",
+        "<custom3",
+        newClass,
+        `contenteditable="false"`
+      ].every((value) => html.sequencesHtml[html.mainSequenceId].includes(value)));
+
+      t.end()
+    }
+)

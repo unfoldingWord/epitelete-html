@@ -1,7 +1,28 @@
 import { parse } from "node-html-parser";
+import UUID from 'pure-uuid';
+import base64 from 'base-64';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
+
+const newGrafts = [];
+
+const generateId = () => base64.encode(new UUID(4)).substring(0, 12);
+
+const handleNewGrafts = (newGrafts) => {
+  const newSequences = {};
+  newGrafts.forEach(graft => {
+    const sequenceId = generateId();
+    newSequences[sequenceId] = {
+      type: graft.subtype,
+      blocks: graft.content || []
+    };
+    graft.target = sequenceId;
+    delete graft.content;
+    delete graft.new;
+  });
+  return newSequences;
+}
 
 const getAttributes = (node) => {
   const atts = node.attributes;
@@ -23,18 +44,35 @@ const kebabDataSet = (target) =>
     return dataset;
   }, {});
 
+const evaluateKey = (key) => {
+  if (key === "true") return true;
+  if (key === "false") return false;
+  return key;
+}
+
+const evaluateProps = function (props) {
+  const newProps = Object.keys(props).reduce((newKeys,key) => {
+    newKeys[key] = evaluateKey(props[key]);
+    return newKeys;
+  }, {})
+  return newProps;
+}
+
 const getDataset = (node) => {
-  const dataSet = node.dataset;
-  if (dataSet) return kebabDataSet(dataSet);
-  const atts = getAttributes(node);
-  return (
-    atts &&
-    Object.keys(atts).reduce((dataset, key) => {
-      const data = key.match(/(?<=data-).+/);
-      if (data) dataset[data] = atts[key];
-      return dataset;
-    }, {})
-  );
+  const _getDataset = (node) => {
+    const dataSet = node.dataset;
+    if (dataSet) return kebabDataSet(dataSet);
+    const atts = getAttributes(node);
+    return (
+      atts &&
+      Object.keys(atts).reduce((dataset, key) => {
+        const data = key.match(/(?<=data-).+/);
+        if (data) dataset[data] = atts[key];
+        return dataset;
+      }, {})
+    );
+  }
+  return evaluateProps(_getDataset(node));
 };
 
 const getProps = (node) => {
@@ -87,10 +125,13 @@ const blockFrom = (node) => {
 const getBlock = (node) => {
   const props = getProps(node);
   const defaultContent = ["paragraph"].includes(props.type) && { content: [] };
-  return {
+  const block = {
     ...props,
     ...(node.childNodes.length ? blockFrom(node) : defaultContent)
   };
+  if (props.type === "graft" && props.new)
+    newGrafts.push(block);
+  return block
 };
 
 const browserGetBlocks = (nodes) => Array.from(nodes, (node) => getBlock(node));
@@ -116,11 +157,12 @@ function html2perf(perfHtml, sequenceId) {
   const sequencesHtml = parseHtml(perfHtml.sequencesHtml[sequenceId]);
   const sequenceElement = sequencesHtml.getElementById(sequenceId);
   const props = getDataset(sequenceElement);
-
-  return {
+  const perfSequence = {
     ...props,
     blocks: getBlocksFrom(sequenceElement)
   };
+  const newSequences = handleNewGrafts(newGrafts);
+  return { perfSequence,newSequences };
 }
 
 export default html2perf;
